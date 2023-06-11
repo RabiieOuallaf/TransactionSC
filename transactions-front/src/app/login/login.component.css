@@ -1,0 +1,126 @@
+.container {
+    background: linear-gradient(to bottom, rgb(123, 123, 255), rgb(16, 6, 47));
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+    
+  }
+  
+  
+
+  
+  .MainTxt {
+    text-align: center;
+    color: white;
+    font-size:3rem;
+  }
+
+  .LoginForm {
+    display: flex;
+    gap: 6px;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(66, 49, 167, 0.69), rgba(248, 243, 255, 0.727));
+    width: fit-content;
+    margin: auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    transition: box-shadow 400ms;
+  }
+  
+  .LoginForm:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  }
+  
+  
+  .inputWrapper {
+    position: relative;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius:8px ;
+    border: 1px #ccc;
+   width: 434px;
+  }
+  
+  input {
+    width: 400px;
+    height: 30px;
+    padding: 8px;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    
+  }
+  .inputWrapper2 {
+    display: flex;
+  
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius:8px ;
+    border: 1px #ccc;
+   width: 434px;
+  }
+  i{
+    padding-right: 9px;
+  }
+  .fa-solid{
+    cursor: pointer;
+  }
+  
+  .placeholderLabel {
+    position: absolute;
+    top: 36%;
+    left: 10px;
+    transform: translateY(-6%);
+    pointer-events: none;
+    transition: all 0.3s;
+    color: rgb(114, 114, 114);
+    font-size: 14px;
+    opacity: 0.5;
+  }
+  
+  .inputActive {
+    top: 0;
+    left: 10px;
+    font-size: 12px;
+    opacity: 1;
+  }
+  .submitButton {
+    background-color: rgb(144, 144, 255);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    padding-left: 150px;
+    padding-right: 150px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    transition: background-color 300ms, padding 300ms;
+  }
+  
+  .submitButton:hover {
+    background-color: rgb(116, 76, 219);
+  }
+  
+  .disabledButton {
+    background-color: rgb(164, 164, 164);
+    cursor: not-allowed;
+    font-weight: bold;
+    padding-left: 100px;
+    outline: none;
+    border: none;
+    border-radius: 8px;
+    padding-right: 100px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    transition: background-color 300ms, padding 300ms;
+  }
+  
+  
