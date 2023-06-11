@@ -90,7 +90,7 @@
     opacity: 1;
   }
   .submitButton {
-    background-color: rgb(144, 144, 255);
+    background-color: rgb(84, 84, 239);
     color: white;
     border: none;
     border-radius: 8px;
@@ -106,7 +106,7 @@
   }
   
   .submitButton:hover {
-    background-color: rgb(116, 76, 219);
+    background-color: rgb(73, 34, 171);
   }
   
   .disabledButton {
