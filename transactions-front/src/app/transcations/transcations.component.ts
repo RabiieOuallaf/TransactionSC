@@ -7,4 +7,13 @@ import { Component } from '@angular/core';
 })
 export class TranscationsComponent {
 
+  displayAccountList : boolean = false;
+
+   toggleAccountList() {
+    this.displayAccountList = !this.displayAccountList;
+   }
+   
+
+   
+
 }

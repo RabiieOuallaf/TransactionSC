@@ -1,0 +1,49 @@
+body 
+{
+    background-color: black;
+}
+nav 
+{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffff;
+    
+}
+nav .navigation-options ul 
+{
+    display: flex;
+    justify-content: space-evenly;
+
+    width: 200px;
+    list-style: none;
+
+}
+nav .navigation-options ul li 
+{
+    font-size:14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+.navigation-options ul li:hover {
+    border-bottom: 2px solid rgb(123, 123, 255);
+
+}
+.logo h2 
+{
+    font-size: 2rem;
+    font-weight: bold;
+}
+.greeting-users 
+{
+    font-size: 18px;
+}
+.greeting-users span 
+{
+    font-weight: bold;
+}
