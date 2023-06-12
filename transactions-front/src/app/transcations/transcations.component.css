@@ -142,7 +142,7 @@
     position: fixed;
     top: 50%;
     max-width: 500px;
-    min-height: 150px;
+    min-height: 200px;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
@@ -156,7 +156,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 120px;
+    height: 170px;
+}
+    
+.transaction-mode 
+{
+    margin: 12px;
+}
+.transaction-mode select 
+{
+    width: 70px;
+    text-align: center;
+    padding: 4px;
+
 }
 .transaction-info .account-info
 {
@@ -172,9 +184,11 @@
     border-radius: 5px;
     margin: 8px;
     cursor: pointer;
+    
 }
 .transaction-button:hover 
 {
     background-color: rgb(32, 161, 32);
     transition: all .1s ease-in;
 }
+    

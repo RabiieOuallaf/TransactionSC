@@ -3,7 +3,7 @@
     <div class="operations">
 
         <div class="sold">
-            <span>500.00 DH</span>
+            <span>{{sold}} DH</span>
          </div>
 
          <div class="accounts" (click)="toggleAccountList()">
@@ -56,24 +56,42 @@
                 <span>
                     Montant :
                 </span>
-                <input type="number">
+                <input 
+                #transactedAmount
+                type="number" 
+                (keyup)="setTransactedAmount(+transactedAmount.value)"
+                >
             </div>
     
-            <div class="account-info">
-                <span>
+            <div class="account-info" *ngIf="showRib">
+                <span >
                     RIB : 
                 </span>
                 <input type="text">
             </div>
     
             <div class="transaction-mode">
-                <select>
-                    <option>IN</option>
-                    <option>OUT</option>
+                <select >
+                    <option
+                        (click)="toggleRibVisiblity('IN'); setOperationMode('IN')"
+                        
+                        value="IN">
+                        IN
+                    </option>
+                    <option 
+                        (click)="toggleRibVisiblity('OUT'); setOperationMode('OUT')"
+                        value="OUT">
+                        OUT
+                    </option>
                 </select>
             </div>
 
-            <button class="transaction-button">Valider</button>
+            <button 
+                class="transaction-button" 
+                (click)="makeTransaction()">
+
+                Valider
+            </button>
         </div>
     </div>
 
