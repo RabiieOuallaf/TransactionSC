@@ -8,11 +8,14 @@ import { Component } from '@angular/core';
 export class TranscationsComponent {
 
   displayAccountList : boolean = false;
+  displayTransactionMenu : boolean = false;
 
    toggleAccountList() {
     this.displayAccountList = !this.displayAccountList;
    }
-   
+   toggleTransactionMenu() {
+    this.displayTransactionMenu = !this.displayTransactionMenu;
+   }
 
    
 

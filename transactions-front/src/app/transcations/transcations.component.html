@@ -10,15 +10,23 @@
             <span>accounts</span>
          </div>
 
+         <div class="accounts" (click)="toggleTransactionMenu()">
+            <span>make a transaction</span>
+         </div>
+
+
     </div>
 
     <div class="acounts-list-background" [hidden]="!displayAccountList"></div>
+    <div class="acounts-list-background" [hidden]="!displayTransactionMenu"></div>
+    
 
     <div class="accounts-list" [hidden]="!displayAccountList">
         <div class="close-accounts-list" (click)="toggleAccountList()">
             X
         </div>
         <div class="account">
+            
             <span>Rabie ouallaf</span> 
             <img 
                 src="../../assets/icons/right-arrow.png" 
@@ -35,7 +43,39 @@
                 style="width: 30px;cursor: pointer;"
             >
         </div>
-    </div>    
+    </div> 
+    
+    
+    <div class="transaction-menu" [hidden]="!displayTransactionMenu">
+        <div class="close-accounts-list" (click)="toggleTransactionMenu()">
+            X
+        </div>
+        <div class="transaction-info">
+            
+            <div class="montant">
+                <span>
+                    Montant :
+                </span>
+                <input type="number">
+            </div>
+    
+            <div class="account-info">
+                <span>
+                    RIB : 
+                </span>
+                <input type="text">
+            </div>
+    
+            <div class="transaction-mode">
+                <select>
+                    <option>IN</option>
+                    <option>OUT</option>
+                </select>
+            </div>
+
+            <button class="transaction-button">Valider</button>
+        </div>
+    </div>
 
     <div class="transaction-table">
         <table>
