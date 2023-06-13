@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { DataService } from '../data.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +14,10 @@ export class LoginComponent {
   isEmailFocused: boolean = false;
   isPasswordFocused: boolean = false;
   isPasswordVisible: boolean = false;
+
+  constructor(private auth: AuthService, private data: DataService) {
+
+  }
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
@@ -36,13 +43,17 @@ export class LoginComponent {
   }
 
   handleLogin(event: Event) {
-    event.preventDefault();
-    try {
-      // Your login logic here using HttpClient or any other Angular HTTP library
-      this.email = '';
-      this.password = '';
-    } catch (error) {
-      console.log(error);
-    }
+    //this.auth.SignIn('md.chbani@gmail.com', '123456');
+    this.data.getUserByEmail('md.chbani@gmail.com').snapshotChanges().pipe(
+      map(changes =>
+        changes.map(c =>
+          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
+        )
+      )
+    ).subscribe(data => {
+      console.log(data);
+    });
   }
+
+
 }
