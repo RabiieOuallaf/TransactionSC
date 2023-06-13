@@ -1,3 +1,115 @@
 <div class="container">
+    <div class="table-container">
+    </div>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Utilisateurs</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Brandon Green</td>
+                    <td>424242xxxxxx6262</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;" (click)="openPopup_2()"></i>
+                        <i class=" b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>Kathy Daniels</td>
+                    <td>424242xxxxxx1616</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                        <i class="b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Elizabeth Alvarado</td>
+
+                    <td>424242xxxxxx5326</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                        <i class="b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Michael Coleman</td>
+
+                    <td>424242xxxxxx6328</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                        <i class="b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Jason Cox</td>
+
+                    <td>424242xxxxxx7648</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                        <i class="b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Christian Perkins</td>
+
+                    <td>424242xxxxxx4152</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                        <i class="b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Emily Wheeler</td>
+
+                    <td>424242xxxxxx6668</td>
+                    <td class="action-B">
+                        <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                        <i class="b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="container-icon">
+            <i class="plus fa-solid fa-circle-plus fa-lg" style="color: #000000;" (click)="openPopup_1()"></i>
+        </div>
+    </div>
+    <div class="popup-edit" *ngIf="popupVisible_2" (click)="closePopup_2()">
+        <!-- Popup content -->
+        <div class="popup-content" (click)="$event.stopPropagation()">
+            <h2>Edit User</h2>
+            <form>
+                <label for="username">Utilisateur:</label>
+                <input type="text" id="username" name="username" [(ngModel)]="selectedUser.username">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" [(ngModel)]="selectedUser.email">
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        <!-- Form and other elements -->
+    </div>
+    <div class="popup-add" *ngIf="popupVisible_1" (click)="closePopup_1()">
+        <!-- Popup content -->
+        <div class="popup-content" (click)="$event.stopPropagation()">
+            <h2>add user</h2>
+            <form>
+                <label for="username">Utilisateur:</label>
+                <input type="text" id="username" name="username" [(ngModel)]="selectedUser.username">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" [(ngModel)]="selectedUser.email">
+
+                <button type="submit">Save</button>
+            </form>
+        </div>
+        <!-- Form and other elements -->
+    </div>
 
 </div>

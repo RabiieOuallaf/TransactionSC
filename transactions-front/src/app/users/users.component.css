@@ -1,0 +1,107 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .table-container {
+    margin: 0 10px;
+    display: flex;
+    gap: 9px;
+  }
+  
+  .table {
+    background-color: rgb(179, 184, 255);
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 98%;
+    /* Adjust the width as per your requirements */
+    max-width: 2000px;
+    /* Maximum width for the table */
+    margin: 0 auto;
+    /* Center the table horizontally */
+    font-size: 16px;
+    /* Adjust the font size as per your requirements */
+  }
+  
+  th,
+  td {
+    padding: 12px;
+    /* Adjust the padding as per your requirements */
+    text-align: left;
+    border-bottom: 1px solid #b5b5b5;
+    font-weight: bold;
+  }
+  
+  th {
+    background-color: #c6c6c6;
+  }
+  
+  .action-B {
+    flex: auto;
+  }
+  
+  .action-B i {
+    cursor: pointer;
+    font-size: 1.2em;
+  }
+  
+  .b1 {
+    color: #000000;
+    padding-right: 3px;
+  }
+  
+  .b2 {
+    color: #e41b1b;
+    padding-left: 3px;
+  }
+  .popup-add , .popup-edit {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-content {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+  }
+  
+  .popup-add , .popup-edit h2 {
+    display: flex;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .popup-a{
+    background-color: #ffffff;
+  }
+  .plus {
+    color: #000000;
+    font-size: 1.8rem;
+    padding-top: 1rem;
+    cursor:pointer
+  }
+  
+  .plus:hover {
+    animation-name: colorChange;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes colorChange {
+    from {
+      color: #000000;
+    }
+    to {
+      color: lightblue;
+    }
+  }
