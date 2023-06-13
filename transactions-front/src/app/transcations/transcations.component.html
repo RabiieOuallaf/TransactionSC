@@ -3,22 +3,30 @@
     <div class="operations">
 
         <div class="sold">
-            <span>500.00 DH</span>
+            <span>{{sold}} DH</span>
          </div>
 
          <div class="accounts" (click)="toggleAccountList()">
             <span>accounts</span>
          </div>
 
+         <div class="accounts" (click)="toggleTransactionMenu()">
+            <span>make a transaction</span>
+         </div>
+
+
     </div>
 
     <div class="acounts-list-background" [hidden]="!displayAccountList"></div>
+    <div class="acounts-list-background" [hidden]="!displayTransactionMenu"></div>
+    
 
     <div class="accounts-list" [hidden]="!displayAccountList">
         <div class="close-accounts-list" (click)="toggleAccountList()">
             X
         </div>
         <div class="account">
+            
             <span>Rabie ouallaf</span> 
             <img 
                 src="../../assets/icons/right-arrow.png" 
@@ -35,7 +43,57 @@
                 style="width: 30px;cursor: pointer;"
             >
         </div>
-    </div>    
+    </div> 
+    
+    
+    <div class="transaction-menu" [hidden]="!displayTransactionMenu">
+        <div class="close-accounts-list" (click)="toggleTransactionMenu()">
+            X
+        </div>
+        <div class="transaction-info">
+            
+            <div class="montant">
+                <span>
+                    Montant :
+                </span>
+                <input 
+                #transactedAmount
+                type="number" 
+                (keyup)="setTransactedAmount(+transactedAmount.value)"
+                >
+            </div>
+    
+            <div class="account-info" *ngIf="showRib">
+                <span >
+                    RIB : 
+                </span>
+                <input type="text">
+            </div>
+    
+            <div class="transaction-mode">
+                <select >
+                    <option
+                        (click)="toggleRibVisiblity('IN'); setOperationMode('IN')"
+                        
+                        value="IN">
+                        IN
+                    </option>
+                    <option 
+                        (click)="toggleRibVisiblity('OUT'); setOperationMode('OUT')"
+                        value="OUT">
+                        OUT
+                    </option>
+                </select>
+            </div>
+
+            <button 
+                class="transaction-button" 
+                (click)="makeTransaction()">
+
+                Valider
+            </button>
+        </div>
+    </div>
 
     <div class="transaction-table">
         <table>
