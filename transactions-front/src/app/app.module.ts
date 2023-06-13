@@ -7,13 +7,14 @@ import { LoginComponent } from './login/login.component';
 import { UsersComponent } from './users/users.component';
 import { TranscationsComponent } from './transcations/transcations.component';
 import { FormsModule } from '@angular/forms';
-
+import { NavbarComponent } from './includes/navbar/navbar.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     UsersComponent,
-    TranscationsComponent
+    TranscationsComponent,
+    NavbarComponent
   ],
   imports: [
     FormsModule,

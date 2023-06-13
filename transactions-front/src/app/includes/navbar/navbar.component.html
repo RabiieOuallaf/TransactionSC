@@ -1,0 +1,24 @@
+<nav>
+    <div class="logo">
+        <h2>TransactionSC</h2>
+    </div>
+
+    <div class="navigation-options">
+        <ul>
+            <li *ngFor="let option of navigationOptions">
+                <img 
+                    [src]="option.icon" 
+                    alt="Option Icon"
+                    width="40px"
+                    >
+                {{ option.label }}
+              </li>
+        </ul>
+    </div>
+
+    <div class="greeting-users">
+        <p>
+            Welcome back , <span class="user-greeting">User 👋</span> 
+        </p>
+    </div>
+</nav>
