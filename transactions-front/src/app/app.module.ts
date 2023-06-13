@@ -6,8 +6,8 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { UsersComponent } from './users/users.component';
 import { TranscationsComponent } from './transcations/transcations.component';
+import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './includes/navbar/navbar.component';
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,6 +17,7 @@ import { NavbarComponent } from './includes/navbar/navbar.component';
     NavbarComponent
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule
   ],

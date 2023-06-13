@@ -1,1 +1,25 @@
-<p>login works!</p>
+<div class="container">
+    <h2 class="MainTxt">Bienvenue à la connexion</h2>
+    <form (submit)="handleLogin($event)" #loginForm="ngForm">
+        <div class="LoginForm">
+
+            <div class="inputWrapper">
+                <input type="email" placeholder="" [(ngModel)]="email" name="email" (focus)="onInputFocus('email')"
+                    (blur)="onInputBlur('email')" required />
+                <label class="placeholderLabel" [ngClass]="{'inputActive': isEmailFocused || email}">Adresse
+                    email</label>
+            </div>
+            <div class="inputWrapper2">
+                <input type="{{ isPasswordVisible ? 'text' : 'password' }}" placeholder="" [(ngModel)]="password"
+                    name="password" (focus)="onInputFocus('password')" (blur)="onInputBlur('password')" required />
+                <label class="placeholderLabel" [ngClass]="{'inputActive': isPasswordFocused || password}">Mot de
+                    passe</label>
+                <i class="fa-solid " [ngClass]="isPasswordVisible ? 'fa-eye-slash' : 'fa-eye'" style="color: #000000;"
+                    (click)="togglePasswordVisibility()"></i>
+            </div>
+            <button [disabled]="!loginForm.form.valid" type="submit"
+                [ngClass]="{ 'submitButton': loginForm.form.valid, 'disabledButton': loginForm.form.invalid }">Login</button>
+
+        </div>
+    </form>
+</div>
