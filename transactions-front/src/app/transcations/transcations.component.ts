@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-transcations',
@@ -11,6 +12,10 @@ export class TranscationsComponent {
   displayTransactionMenu : boolean = false;
   showRib : boolean = false;
   sold : number = 0;
+
+  constructor(public auth: AuthService) {
+
+  }
 
   // ==== Toggle methods ==== //
 

@@ -8,6 +8,14 @@ import { UsersComponent } from './users/users.component';
 import { TranscationsComponent } from './transcations/transcations.component';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './includes/navbar/navbar.component';
+import { environment } from 'src/enviorment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AuthService } from './auth.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,9 +27,14 @@ import { NavbarComponent } from './includes/navbar/navbar.component';
   imports: [
     FormsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule,
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
