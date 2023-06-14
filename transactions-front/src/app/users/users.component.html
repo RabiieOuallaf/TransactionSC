@@ -90,6 +90,17 @@
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" [(ngModel)]="selectedUser.email">
 
+                <!-- <button type="button" (click)="addAccount()" [disabled]="accounts.length >= 5">Add Account</button> -->
+
+                <!-- Input fields for adding a new account -->
+                <!-- <div *ngFor="let account of accounts">
+                  <label for="username{{account.id}}">Utilisateur:</label>
+                  <input type="text" [id]="'username' + account.id" [name]="'username' + account.id" [(ngModel)]="account.username">
+            
+                  <label for="email{{account.id}}">Email:</label>
+                  <input type="email" [id]="'email' + account.id" [name]="'email' + account.id" [(ngModel)]="account.email">
+                </div> -->
+
                 <button type="submit">Save</button>
             </form>
         </div>
