@@ -12,6 +12,7 @@ export class UsersComponent {
     username: '',
     email: ''
   };
+  accounts = [];
 
   openPopup_1() {
     this.popupVisible_1 = true;
@@ -26,4 +27,7 @@ export class UsersComponent {
   closePopup_2() {
     this.popupVisible_2 = false;
   }
+  // addAccount() {
+  //   this.accounts.push({ id: this.accounts.length + 1, username: '', email: '' });
+  // }
 }

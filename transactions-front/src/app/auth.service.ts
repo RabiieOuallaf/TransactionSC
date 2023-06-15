@@ -39,6 +39,16 @@ export class AuthService {
   }
 
   SignIn(email: string, password: string) {
+    if (!this.validateEmail(email)) {
+      alert('Invalid email');
+      return; // Stop the function execution if email is invalid
+    }
+  
+    if (!this.validatePassword(password)) {
+      alert('Invalid password');
+      return; // Stop the function execution if password is invalid
+    }
+  
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
@@ -51,8 +61,21 @@ export class AuthService {
       })
       .catch((error) => {
         console.log(error.message);
+        alert('This account is not authorized');
       });
   }
+  
+  private validateEmail(email: string): boolean {
+    // email validation logic
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  
+  private validatePassword(password: string): boolean {
+    // password validation logic
+    return password.length >= 6;
+  }
+  
 
 
   SetUserData(user: any) {
