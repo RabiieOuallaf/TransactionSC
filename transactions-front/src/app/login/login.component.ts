@@ -38,22 +38,41 @@ export class LoginComponent {
     }
   }
 
-  isFormValid(): boolean {
-    return this.email.trim() !== '' && this.password.trim() !== '';
-  }
+  // isFormValid(): boolean {
+  //   return this.email.trim() !== '' && this.password.trim() !== '';
+  // }
 
   handleLogin(event: Event) {
-    //this.auth.SignIn('md.chbani@gmail.com', '123456');
-    this.data.getUserByEmail('md.chbani@gmail.com').snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-        )
-      )
-    ).subscribe(data => {
-      console.log(data);
-    });
+    event.preventDefault(); // Prevent the default form submission behavior
+    
+    const signInPromise = this.auth.SignIn(this.email, this.password);
+    
+    if (signInPromise) {
+      signInPromise
+        .then(() => {
+          // Authentication succeeded, proceed with further actions
+        })
+        .catch((error) => {
+          // Authentication failed, display an alert
+          alert('Email or password is not working');
+        });
+    } else {
+      // Handle the case where SignIn method returns undefined
+      alert('Sign-in method is not available');
+    }
   }
+  
+  
+  
 
 
 }
+    // this.data.getUserByEmail('md.chbani@gmail.com').snapshotChanges().pipe(
+    //   map(changes =>
+    //     changes.map(c =>
+    //       ({ id: c.payload.doc.id, ...c.payload.doc.data() })
+    //     )
+    //   )
+    // ).subscribe(data => {
+    //   console.log(data);
+    // });
