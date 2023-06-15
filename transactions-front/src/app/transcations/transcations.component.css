@@ -141,7 +141,7 @@
 {
     position: fixed;
     top: 50%;
-    max-width: 500px;
+    max-width: 550px;
     min-height: 200px;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -170,10 +170,24 @@
     padding: 4px;
 
 }
+.transaction-menu .transaction-info 
+{
+    display: flex;
+    flex-direction: row;
+}
 .transaction-info .account-info
 {
     margin: 1rem;
 }
+.transaction-info .RIB 
+{
+    margin: .9rem;
+}
+.transaction-info .title 
+{
+    margin: .9rem;
+}
+
 .transaction-button
 {
     background-color: rgb(65, 189, 65);

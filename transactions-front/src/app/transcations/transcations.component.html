@@ -25,24 +25,16 @@
         <div class="close-accounts-list" (click)="toggleAccountList()">
             X
         </div>
-        <div class="account">
+        <div class="account" *ngFor="let account of userAccounts">
             
-            <span>Rabie ouallaf</span> 
+            <span>{{account.title}}</span> 
             <img 
                 src="../../assets/icons/right-arrow.png" 
                 alt="right arrow"
                 style="width: 30px;cursor: pointer;"
             >
         </div>
-
-        <div class="account">
-            <span>Rabie ouallaf</span> 
-            <img 
-                src="../../assets/icons/right-arrow.png" 
-                alt="right arrow"
-                style="width: 30px;cursor: pointer;"
-            >
-        </div>
+        
     </div> 
     
     
@@ -63,23 +55,36 @@
                 >
             </div>
     
-            <div class="account-info" *ngIf="showRib">
-                <span >
-                    RIB : 
-                </span>
-                <input type="text">
+            <div class="account-info">
+                <div class="RIB">
+                    <span >
+                        RIB : 
+                    </span>
+                    <input type="number">
+                </div>
+
+                <div class="title">
+                    <span >
+                        Title : 
+                    </span>
+                    <input 
+                        #operationTtile
+                        type="text"
+                        (keyup)="setOperationTitle(operationTtile.value)"
+                        >
+                </div>
             </div>
     
             <div class="transaction-mode">
                 <select >
                     <option
-                        (click)="toggleRibVisiblity('IN'); setOperationMode('IN')"
+                        (click)="setOperationMode('in')"
                         
                         value="IN">
                         IN
                     </option>
                     <option 
-                        (click)="toggleRibVisiblity('OUT'); setOperationMode('OUT')"
+                        (click)="setOperationMode('out')"
                         value="OUT">
                         OUT
                     </option>
@@ -99,35 +104,31 @@
         <table>
           <thead>
             <tr>
-              <th>Sequence</th>  
+              <th>Sequence</th> 
+              <th>Type</th> 
               <th>Title</th>
               <th>Montant</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let transaction of userTransactions">
                 <td>
-                    1
+                    {{ transaction.sequence }}
                 </td>
                 <td>
-                    In
+                    {{ transaction.type }}
                 </td>
-                <td class="montant-positive">
-                    +500.00 DH
+                <td>
+                    {{ transaction.title }}
+                </td>
+                <td [ngClass]="{'montant-positive' : transaction.type == 'in' , 'montant-negative' : transaction.type == 'out'}">
+                    <span *ngIf="transaction.type === 'in'">+</span>
+                    <span *ngIf="transaction.type === 'out'">-</span>
+                    {{  transaction.amount | currency: 'DH' }}
                 </td>
             </tr>
 
-            <tr>
-                <td>
-                    1
-                </td>
-                <td>
-                    Out
-                </td>
-                <td class="montant-negative">
-                    -100.00 DH
-                </td>
-            </tr>
+
           </tbody>
         </table>
       </div>
