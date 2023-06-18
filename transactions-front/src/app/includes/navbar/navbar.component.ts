@@ -18,7 +18,7 @@ export class NavbarComponent {
     }
 
     navigationOptions = [
-        { label: 'Transactions', icon: '../../../assets/icons/card-payment.png' },
+         { label: 'Transactions', icon: '../../../assets/icons/card-payment.png' },
         { label: 'Users', icon: '../../../assets/icons/team.png' },
     ];
 
