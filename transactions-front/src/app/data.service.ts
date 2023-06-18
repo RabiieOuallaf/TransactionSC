@@ -24,24 +24,23 @@ export class DataService {
       .collection(`users/${userUid}/accounts`)
       .valueChanges();
   }
-  getUserTransactions(userUid: number) {
+  getUserTransactions(userUid: string) {
     return this.fireStore
       .collection(`sessions/czeG6Qjax7n0jyhTJhH5/transactions`, ref => 
-        ref.where('accountId', '==' , userUid)  
+        ref.where('transactionMaker', '==' , userUid)  
       )
-      
       .valueChanges();
   }
   createTransaction(amount: number, sequence: number,title : string, type : string) {
-    const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // // Get a reference to a new session document with an auto-generated ID
+    const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Get a reference to a new session document with an auto-generated ID
     const transactionCollectionReference = sessionReference.collection('transactions');
-    const userId = localStorage.getItem('transactionMaker');
+    const transactionMaker = localStorage.getItem('currentAccount');
     const transactionData = {
       amount: amount,
       sequence : sequence,
       title: title,
       type : type,
-      transactionMaker : userId
+      transactionMaker : transactionMaker
     }
 
 

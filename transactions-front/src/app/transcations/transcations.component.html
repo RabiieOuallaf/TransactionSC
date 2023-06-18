@@ -25,13 +25,16 @@
         <div class="close-accounts-list" (click)="toggleAccountList()">
             X
         </div>
-        <div class="account" *ngFor="let account of userAccounts">
+        <div 
+            class="account" 
+            *ngFor="let account of userAccounts">
             
             <span>{{account.title}}</span> 
             <img 
                 src="../../assets/icons/right-arrow.png" 
                 alt="right arrow"
                 style="width: 30px;cursor: pointer;"
+                (click)="switchUserAccounts(account.account_number, account.title)"
             >
         </div>
         
@@ -133,8 +136,20 @@
         </table>
       </div>
 
+      <div class="account-tabs-container">
 
-    
+          <div class="account-tabs">
+            <div 
+                class="tab" 
+                *ngFor="let account of switchedAccountsHistory" 
+                [class.active]="isCurrentAccount(account.account_id)"  
+                (click)="switchUserAccounts(account.account_id, account.account_username)"              
+                >
+              {{ account.account_username }}
+            </div>
+          </div>
+      </div>
+      
       
     
 
