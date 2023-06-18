@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import {user} from './../models/interfaces.type'
+import { AngularFirestore, AngularFirestoreCollection, } from '@angular/fire/compat/firestore';
+import { user } from './../models/interfaces.type'
 import { query, where } from '@firebase/firestore';
 
 @Injectable({
@@ -9,16 +9,51 @@ import { query, where } from '@firebase/firestore';
 export class DataService {
 
   usersRef: AngularFirestoreCollection<user> | undefined;
-  constructor(private fireStore: AngularFirestore) {
-
-  }
+  constructor(private fireStore: AngularFirestore) { }
 
   getUsers(): AngularFirestoreCollection<user> {
     return this.fireStore.collection('users');
   }
 
   getUserByEmail(mail: string): AngularFirestoreCollection<user> {
-    return this.fireStore.collection('users', user => user.where('email', '==',mail));
+    return this.fireStore.collection('users', user => user.where('email', '==', mail));
   }
+
+  getUserAccounts(userUid: string) {
+    return this.fireStore
+      .collection(`users/${userUid}/accounts`)
+      .valueChanges();
+  }
+  getUserTransactions(userUid: string) {
+    return this.fireStore
+      .collection(`sessions/czeG6Qjax7n0jyhTJhH5/transactions`, ref => 
+        ref.where('transactionMaker', '==' , userUid)  
+      )
+      .valueChanges();
+  }
+  createTransaction(amount: number, sequence: number,title : string, type : string) {
+    const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Get a reference to a new session document with an auto-generated ID
+    const transactionCollectionReference = sessionReference.collection('transactions');
+    const transactionMaker = localStorage.getItem('currentAccount');
+    const transactionData = {
+      amount: amount,
+      sequence : sequence,
+      title: title,
+      type : type,
+      transactionMaker : transactionMaker
+    }
+
+
+
+    transactionCollectionReference.add(transactionData)
+      .then(() => {
+        console.log('Session created seccussfully !')
+        transactionCollectionReference.add(transactionCollectionReference)
+      })
+      .catch(erorr => {
+        erorr.log(erorr);
+      })
+  }
+
 
 }
