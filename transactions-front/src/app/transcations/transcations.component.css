@@ -153,10 +153,13 @@
 .transaction-menu .transaction-info
 {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    height: 170px;
+    height: 300px;
+    flex-direction: column;
+    margin: 3rem;
+
+
 }
     
 .transaction-mode 
@@ -170,22 +173,22 @@
     padding: 4px;
 
 }
-.transaction-menu .transaction-info 
+
+.transaction-info .montant input 
 {
-    display: flex;
-    flex-direction: row;
+    width: 200px;
+    height: 30px;
+} 
+
+.transaction-info .RIB input
+{
+    width: 200px;
+    height: 30px;
 }
-.transaction-info .account-info
+.transaction-info .title input
 {
-    margin: 1rem;
-}
-.transaction-info .RIB 
-{
-    margin: .9rem;
-}
-.transaction-info .title 
-{
-    margin: .9rem;
+    width: 200px;
+    height: 30px;
 }
 
 .transaction-button
