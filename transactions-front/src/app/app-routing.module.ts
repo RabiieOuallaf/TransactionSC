@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { UsersComponent } from './users/users.component';
 import { TranscationsComponent } from './transcations/transcations.component';
+import { AuthGuard } from './auth-guard.service';
 const routes: Routes = [
   {
     path: 'login',
@@ -11,21 +12,25 @@ const routes: Routes = [
       title: 'Login Page'
     }
   },
+
+
   {
-    path:'users',
-    component:UsersComponent,
+    path: 'users',
+    component: UsersComponent,
     data: {
       title: 'Users Page'
-    }
+    },
+    canActivate:[AuthGuard]
   },
   {
-    path:'transactions',
-    component:TranscationsComponent,
+    path: 'transactions',
+    component: TranscationsComponent,
     data: {
       title: 'Transactions Page'
-    }
+    },
+    canActivate:[AuthGuard]
   },
-  {path: '**', redirectTo: 'login'}
+  { path: '**', redirectTo: 'login' }
 ];
 
 @NgModule({
