@@ -47,42 +47,43 @@
         </div>
         <div class="transaction-info">
             
+            
             <div class="montant">
                 <span>
                     Montant :
                 </span>
+                <br>
                 <input 
                 #transactedAmount
                 type="number" 
                 (keyup)="setTransactedAmount(+transactedAmount.value)"
                 >
             </div>
-    
-            <div class="account-info">
-                <div class="RIB">
-                    <span >
-                        RIB : 
-                    </span>
-                    <input type="number">
-                </div>
-
-                <div class="title">
-                    <span >
-                        Title : 
-                    </span>
-                    <input 
-                        #operationTtile
-                        type="text"
-                        (keyup)="setOperationTitle(operationTtile.value)"
-                        >
-                </div>
+            <div class="RIB">
+                <span >
+                    RIB  : 
+                </span>
+                <br>
+                <input type="number">
             </div>
+
+            <div class="title">
+                <span >
+                    Title: 
+                </span>
+                <br>
+                <input 
+                    #operationTtile
+                    type="text"
+                    (keyup)="setOperationTitle(operationTtile.value)"
+                    >
+            </div>
+            .
     
             <div class="transaction-mode">
                 <select >
                     <option
                         (click)="setOperationMode('in')"
-                        
                         value="IN">
                         IN
                     </option>
