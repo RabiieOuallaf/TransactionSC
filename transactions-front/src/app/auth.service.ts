@@ -18,6 +18,7 @@ export class AuthService {
     photoURL: '',
     emailVerified: false
   };
+  isLoggedIn: boolean = false;
 
   constructor(
     public afs: AngularFirestore,
@@ -29,6 +30,7 @@ export class AuthService {
       if (user) {
         const userData = JSON.parse(localStorage.getItem('user')!);
         this.currentUser = userData ? userData : this.currentUser;
+        this.isLoggedIn = true;
       } else {
         this.currentUser = {
           uid: '',
@@ -39,10 +41,11 @@ export class AuthService {
           photoURL: '',
           emailVerified: false
         };
+        this.isLoggedIn = false;
       }
     });
   }
-  
+
   createUserWithEmailAndPassword(email: string, password: string): Promise<UserCredential> {
     return this.afAuth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
@@ -52,7 +55,7 @@ export class AuthService {
         throw error;
       });
   }
-  
+
 
   SignIn(email: string, password: string) {
     if (!this.validateEmail(email)) {
@@ -104,28 +107,28 @@ export class AuthService {
       emailVerified: user.emailVerified,
       name: '',
       password: '',
-      accounts: [] 
+      accounts: []
     };
-  
+
     if (user.displayName) {
       userData.name = user.displayName; // Assign user.displayName to userData.name
     }
-  
+
     this.currentUser = userData;
     userRef.set(userData, {
       merge: true,
     });
-  
+
     localStorage.setItem('user', JSON.stringify(userData)); // Store user data in localStorage
   }
-  
+
   SignOut() {
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user'); // Remove the 'user' item from localStorage
       this.router.navigate(['login']); // Navigate to the sign-in page or any other desired page
     });
   }
-  
+
 
   getUser() {
     return this.currentUser.email;
