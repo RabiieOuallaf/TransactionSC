@@ -47,3 +47,19 @@ nav .navigation-options ul li
 {
     font-weight: bold;
 }
+.signOut{
+    background-color: rgb(84, 84, 239);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    transition: background-color 300ms, padding 300ms;
+    
+}
