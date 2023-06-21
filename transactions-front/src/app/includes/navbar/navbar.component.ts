@@ -18,16 +18,16 @@ export class NavbarComponent {
     }
 
     navigationOptions = [
-        { label: 'Transactions', icon: '../../../assets/icons/card-payment.png' },
+         { label: 'Transactions', icon: '../../../assets/icons/card-payment.png' },
         { label: 'Users', icon: '../../../assets/icons/team.png' },
     ];
 
 
     getUserEmail() {
-        localStorage.getItem('user')
         const user = JSON.parse(localStorage.getItem('user')!);
-        return user.email;
-
-    }
-
+        if (user && user.email) {
+          return user.email;
+        }
+        return ''; 
+      }
 }
