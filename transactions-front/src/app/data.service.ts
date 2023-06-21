@@ -38,6 +38,7 @@ export class DataService {
       map(changes =>
         changes.map(c =>
           ({ id: c.payload.doc.id })
+          
         )
       )
     );
@@ -58,6 +59,7 @@ export class DataService {
   }
   
   createTransaction(amount: number, sequence: number,title : string, type : string) {
+    const userId = localStorage.getItem('currentAccount') || '';
     const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Get a reference to a new session document with an auto-generated ID
     const transactionCollectionReference = sessionReference.collection('transactions');
     const transactionMaker = localStorage.getItem('currentAccount');
