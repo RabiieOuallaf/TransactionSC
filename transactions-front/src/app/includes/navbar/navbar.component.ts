@@ -24,10 +24,10 @@ export class NavbarComponent {
 
 
     getUserEmail() {
-        localStorage.getItem('user')
         const user = JSON.parse(localStorage.getItem('user')!);
-        return user.email;
-
-    }
-
+        if (user && user.email) {
+          return user.email;
+        }
+        return ''; 
+      }
 }
