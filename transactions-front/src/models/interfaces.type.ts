@@ -1,35 +1,39 @@
 export interface user {
     active: number;
     admin: number;
-    title : string;
+    title: string;
     userId: string;
     userName: string;
-    accounts: account[];
-}
-
-export interface AuthUser {
-    uid: string;
+    accounts: Account[];
+  }
+  
+  export interface AuthUser {
+    name: string;
     email: string;
+    password: string;
+    uid: string;
     displayName: string;
     photoURL: string;
     emailVerified: boolean;
- }
-
-interface account {
+    accounts?: Account[];
+  }
+  
+  export interface Account {
     account_number: number;
     title: string;
-}
-
-interface session {
-    accountId: string
+  }
+  
+  export interface Session {
+    accountId: string;
     date: string;
-    state : number;
-    transactions: transaction[];
-}
-
-interface transaction{
+    state: number;
+    transactions: Transaction[];
+  }
+  
+  export interface Transaction {
     amount: number;
     sequence: number;
     title: string;
     type: string;
-}
+  }
+  
