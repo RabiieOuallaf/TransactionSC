@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { UsersService } from '../users.service';
-import { AuthUser } from 'src/models/interfaces.type';
+import { Account, AuthUser } from 'src/models/interfaces.type';
 
 @Component({
   selector: 'app-users',
@@ -11,18 +11,22 @@ import { AuthUser } from 'src/models/interfaces.type';
 export class UsersComponent implements OnInit {
   popupVisible_1 = false;
   popupVisible_2 = false;
+  showAddAccountForm: boolean = false;
+  isAccountFormVisible: boolean = false;
+  isAccountLimitReached = false;
   users: AuthUser[] = [];
   currentPage = 1;
   selectedUser: AuthUser = {
-
     uid: '',
     name: '',
     email: '',
     password: '',
     displayName: '',
     photoURL: '',
-    emailVerified: false
+    emailVerified: false,
   };
+
+
 
   accounts: any[] = [];
 
@@ -32,14 +36,25 @@ export class UsersComponent implements OnInit {
     this.userService.getAllUsers().subscribe((users: AuthUser[]) => {
       this.users = users;
       console.log(users);
+
+      // // Check if the selected user has 5 documents in the account collection
+      // const selectedUser = this.users.find(user => user.uid === this.selectedUser.uid);
+      // const selectedUserAccountCount = selectedUser?.
+      // this.isAccountLimitReached = selectedUserAccountCount >= 5;
+      // this.showAddAccountForm = !this.isAccountLimitReached;
     });
   }
+
+
+
+
 
   openPopup_1() {
     this.popupVisible_1 = true;
   }
 
-  openPopup_2() {
+  openPopup_2(user: AuthUser) {
+    this.selectedUser = { ...user };
     this.popupVisible_2 = true;
   }
 
@@ -51,6 +66,11 @@ export class UsersComponent implements OnInit {
     this.popupVisible_2 = false;
   }
 
+  toggleAddAccountForm() {
+    this.isAccountFormVisible = !this.isAccountFormVisible;
+  }
+
+
   createUser() {
     // Store the user data in a separate variable before creating the user
     const newUser: AuthUser = {
@@ -60,7 +80,7 @@ export class UsersComponent implements OnInit {
       uid: '', // Add the appropriate value here
       displayName: '', // Add the appropriate value here
       photoURL: '', // Add the appropriate value here
-      emailVerified: false // Add the appropriate value here
+      emailVerified: false, // Add the appropriate value here
     };
 
     this.auth.createUserWithEmailAndPassword(this.selectedUser.email, this.selectedUser.password)
@@ -73,7 +93,7 @@ export class UsersComponent implements OnInit {
       })
       .then(() => {
         console.log('User created successfully');
-        // Optionally, you can refresh the user list by calling getAllUsers() again
+
         // Reset the selectedUser object
         this.selectedUser = {
           name: '',
@@ -82,8 +102,9 @@ export class UsersComponent implements OnInit {
           uid: '',
           displayName: '',
           photoURL: '',
-          emailVerified: false
+          emailVerified: false,
         };
+        this.closePopup_1();
       })
       .catch((error) => {
         // Error occurred while creating the user
@@ -91,9 +112,62 @@ export class UsersComponent implements OnInit {
       });
   }
 
+  updateUser() {
+    this.userService.updateUser(this.selectedUser)
+      .then(() => {
+        // User updated successfully
+        this.createAccount();
 
+        this.closePopup_2();
+        console.log('User updated successfully');
+        // Perform any additional actions or show a success message
+      })
+      .catch((error) => {
+        // Error occurred while updating user
+        console.error('Error updating user:', error);
+        // Handle the error or show an error message
+      });
+  }
 
+  deleteUser(user: AuthUser) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userService.deleteUser(user.uid)
+        .then(() => {
 
+        })
+        .catch((error) => {
+          console.log('Error deleting user', error);
 
+        })
+    }
 
+  }
+
+  newAccount: Account = { account_number: 0, title: '' };
+  createAccount() {
+    const account: Account = {
+      account_number: this.newAccount.account_number,
+      title: this.newAccount.title
+    };
+
+    const userId = this.selectedUser.uid; // Get the user ID from the selectedUser object
+
+    this.userService.createAccount(account, userId)
+      .then(() => {
+        // Account created successfully
+        console.log('Account created successfully');
+        this.closePopup_2();
+        alert('creating account');
+
+        // Reset the newAccount object
+        this.newAccount = {
+          account_number: 0,
+          title: ''
+        };
+      })
+      .catch((error) => {
+        // Handle error
+        console.error('Error creating account:', error);
+      });
+  }
 }

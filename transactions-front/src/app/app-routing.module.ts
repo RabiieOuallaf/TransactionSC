@@ -19,16 +19,14 @@ const routes: Routes = [
     component: UsersComponent,
     data: {
       title: 'Users Page'
-    },
-    canActivate:[AuthGuard]
+    }
   },
   {
     path: 'transactions',
     component: TranscationsComponent,
     data: {
       title: 'Transactions Page'
-    },
-    canActivate:[AuthGuard]
+    }
   },
   { path: '**', redirectTo: 'login' }
 ];
