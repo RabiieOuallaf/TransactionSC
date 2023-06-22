@@ -1,30 +1,60 @@
   import { Component } from '@angular/core';
   import { AuthService } from '../auth.service';
   import { DataService } from '../data.service';
+  import { DatePipe } from '@angular/common';
 
   @Component({
     selector: 'app-transcations',
     templateUrl: './transcations.component.html',
-    styleUrls: ['./transcations.component.css']
+    styleUrls: ['./transcations.component.css'],      
+    providers : [DatePipe]
   })
   export class TranscationsComponent {
 
     displayAccountList: boolean = false;
     displayTransactionMenu: boolean = false;
+    displayDepotMenu : boolean = false;
+
     sold: number = 0;
     userAccounts: any[] = [];
     userTransactions: any[] = [];
     userAccountsTransactionsHistory: any[] = [];
 
-    constructor(public auth: AuthService, public accountsAndTransactions: DataService) {
+    reverseTransactionLabel = 'oldest-newst'
+
+    
+    constructor(
+        public auth: AuthService, 
+        public accountsAndTransactions: DataService,
+        private datePipe: DatePipe
+        ) {
 
     }
 
     ngOnInit(): void {
       this.displayUserAccounts();
       this.displayUserTransactions();
+      this.setCurrentDate();
+      
+    }
+    // == current date == //
+    currentDate: string = '';
+    setCurrentDate() {
+      const today = new Date();
+      this.currentDate = this.datePipe.transform(today, 'yyyy-MM-dd HH:mm:ss') || '';
     }
     
+
+    reverseTransactions() {
+      this.userTransactions.reverse();
+    }
+    toggleReverseTransactionsButtonLabel() {
+      if(this.reverseTransactionLabel == 'oldest-newst'){
+        this.reverseTransactionLabel = 'newst-oldest';
+      } 
+      this.reverseTransactionLabel = 'oldest-newst';
+    }
+
     
 
     // ==== Toggle methods ==== //
@@ -35,8 +65,16 @@
     toggleTransactionMenu() {
       this.displayTransactionMenu = !this.displayTransactionMenu;
     }
-
-
+    toggleDepotMenu() {
+      this.displayDepotMenu = !this.displayTransactionMenu;
+    }
+    closeDepotMenu() {
+      this.displayDepotMenu = false;
+      const depotMenu = document.getElementById('depotMenuButton');
+      if(depotMenu) {
+        depotMenu.style.display = 'none';
+      }
+    }
 
 
     // ==== Transaction methods ==== //
@@ -55,6 +93,7 @@
     setOperationTitle(value: string) {
       this.operationTitle = value;
     }
+    
 
 
 
@@ -76,6 +115,12 @@
         this.sold = this.sold + this.transactedAmount;
         this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType);
       }
+      
+    }
+    // separating the logic of transactions to clean up the code 
+    postDepot() {
+      this.sold = this.sold + this.transactedAmount;
+      this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot');
     }
 
     // displaying and switching accounts 
@@ -111,7 +156,6 @@
       const isDuplicate = this.switchedAccountsHistory.some(
         (account: any) => account.account_id === switchedAccountId
       );
-    
       // Add the account to the history only if it's not a duplicate
       if (!isDuplicate) {
         this.switchedAccountsHistory.push({
@@ -136,13 +180,19 @@
         this.accountsAndTransactions.getUserTransactions(transactionMaker)
           .subscribe(transactions => {
             this.userTransactions = transactions;
-            this.userAccountsTransactionsHistory.push({transactionMaker : transactionMaker , transactions});
+    
+            // Sort transactions by Date in descending order
+            this.userTransactions.sort((a, b) => {
+              const dateA = new Date(a.Date);
+              const dateB = new Date(b.Date);
+              return dateB > dateA ? 1 : -1;
+            });
+    
+            this.userAccountsTransactionsHistory.push({ transactionMaker: transactionMaker, transactions });
             this.transactionsNotification(transactionMaker);
             console.log(this.userTransactions);
-           
-
           });
-        }
+      }
     }
     
     transactionsNotification(transactionMaker: string) {

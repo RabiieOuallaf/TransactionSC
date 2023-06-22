@@ -5,6 +5,7 @@ import { map,switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 
+
 import 'firebase/compat/firestore';
 @Injectable({
   providedIn: 'root'
@@ -49,9 +50,9 @@ export class DataService {
         if (sessions.length > 0) {
           const sessionId = sessions[0].id;
           return this.fireStore
-            .collection(`sessions/${sessionId}/transactions`)
-            .valueChanges();
-        } else {
+          .collection(`sessions/${sessionId}/transactions`, ref => ref.orderBy('Date', 'desc'))
+          .valueChanges();
+        } else {  
           return of([]); // Return an empty array if no session found for the user
         }
       })
@@ -59,7 +60,6 @@ export class DataService {
   }
   
   createTransaction(amount: number, sequence: number,title : string, type : string) {
-    const userId = localStorage.getItem('currentAccount') || '';
     const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Get a reference to a new session document with an auto-generated ID
     const transactionCollectionReference = sessionReference.collection('transactions');
     const transactionMaker = localStorage.getItem('currentAccount');
@@ -68,6 +68,7 @@ export class DataService {
       sequence : sequence,
       title: title,
       type : type,
+      Date : new Date(),
       transactionMaker : transactionMaker
     }
 
