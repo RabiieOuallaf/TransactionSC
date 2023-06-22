@@ -74,6 +74,7 @@
       if(depotMenu) {
         depotMenu.style.display = 'none';
       }
+    
     }
 
 
