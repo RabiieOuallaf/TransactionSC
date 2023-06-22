@@ -166,7 +166,7 @@ export class TranscationsComponent {
     this.displayUserTransactions()
     // Check if the account already exists in the history
     const isDuplicate = this.switchedAccountsHistory.some(
-      (account: any) => account.account_id === switchedAccountId
+      (account: any) => account.account_id == switchedAccountId
     );
     // Add the account to the history only if it's not a duplicate
     if (!isDuplicate) {
