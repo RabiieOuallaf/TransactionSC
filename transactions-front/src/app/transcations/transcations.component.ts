@@ -37,6 +37,7 @@ export class TranscationsComponent {
     this.setCurrentDate();
   }
 
+
   // == current date == //
   currentDate: string = '';
   setCurrentDate() {
@@ -76,11 +77,17 @@ export class TranscationsComponent {
     }
   }
   hasDepotOperation(userTransactions: any[]) {
-    const hasDepotOperation = userTransactions.some(transaction => transaction.type == 'Depot');
+    console.log(userTransactions);
+    const hasDepotOperation = userTransactions.length > 0 ? userTransactions.some(transaction => transaction.type == 'Depot') : false;
     if (hasDepotOperation) {
       const depotMenu = document.getElementById('depotMenuButton');
       if (depotMenu) {
         depotMenu.style.display = 'none';
+      }
+    }else {
+      const depotMenu = document.getElementById('depotMenuButton');
+      if (depotMenu) {
+        depotMenu.style.display = 'block';
       }
     }
   }
@@ -147,11 +154,7 @@ export class TranscationsComponent {
 
     this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
       this.userAccounts = accounts;
-      this.switchedAccountsHistory.push({
-        account_id: this.userAccounts[0].account_number,
-        account_username: this.userAccounts[0].title,
-        hasChanged: false, // Add a 'hasChanged' property to track changes
-      });
+      
       this.currentAccount = this.userAccounts[0].account_number;
 
     });
@@ -163,7 +166,7 @@ export class TranscationsComponent {
     this.currentAccount = switchedAccountId;
     localStorage.setItem('currentAccount', switchedAccountId);
 
-    this.displayUserTransactions()
+    this.displayUserTransactions();
     // Check if the account already exists in the history
     const isDuplicate = this.switchedAccountsHistory.some(
       (account: any) => account.account_id == switchedAccountId
@@ -183,7 +186,6 @@ export class TranscationsComponent {
     );
 
   }
-
   // display transactions
   displayUserTransactions() {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
@@ -193,7 +195,7 @@ export class TranscationsComponent {
         .subscribe(transactions => {
           this.userTransactions = transactions;
           this.hasDepotOperation(transactions);
-
+          
           // Sort transactions by Date in descending order
           this.userTransactions.sort((a, b) => {
             const dateA = new Date(a.Date);
@@ -204,6 +206,8 @@ export class TranscationsComponent {
           this.userAccountsTransactionsHistory.push({ transactionMaker: transactionMaker, transactions });
         });
     }
+    this.hasDepotOperation(this.userTransactions);
+
   }
   isCurrentAccount(accountId: string): boolean {
     return this.currentAccount == accountId;
