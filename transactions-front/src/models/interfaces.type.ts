@@ -15,10 +15,11 @@ export interface user {
     displayName: string;
     photoURL: string;
     emailVerified: boolean;
-    accounts?: Account[];
+  
   }
   
   export interface Account {
+    id?: string;
     account_number: number;
     title: string;
   }

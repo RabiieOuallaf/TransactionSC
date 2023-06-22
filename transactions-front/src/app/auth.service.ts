@@ -16,7 +16,8 @@ export class AuthService {
     password: '',
     displayName: '',
     photoURL: '',
-    emailVerified: false
+    emailVerified: false,
+
   };
   isLoggedIn: boolean = false;
 
@@ -39,7 +40,7 @@ export class AuthService {
           password: '',
           displayName: '',
           photoURL: '',
-          emailVerified: false
+          emailVerified: false,
         };
         this.isLoggedIn = false;
       }
@@ -61,6 +62,7 @@ export class AuthService {
     if (!this.validateEmail(email)) {
       alert('Invalid email');
       return; // Stop the function execution if email is invalid
+
     }
 
     if (!this.validatePassword(password)) {
@@ -74,6 +76,7 @@ export class AuthService {
         if (result && result.user) {
           this.SetUserData(result.user);
           this.afAuth.authState.subscribe((user) => {
+
             if (user) {
               this.router.navigate(['transactions']);
             }
@@ -107,12 +110,13 @@ export class AuthService {
       emailVerified: user.emailVerified,
       name: '',
       password: '',
-      accounts: []
+
     };
 
     if (user.displayName) {
       userData.name = user.displayName; // Assign user.displayName to userData.name
     }
+    
 
     this.currentUser = userData;
     userRef.set(userData, {
@@ -123,6 +127,7 @@ export class AuthService {
   }
 
   SignOut() {
+    
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user'); // Remove the 'user' item from localStorage
       this.router.navigate(['login']); // Navigate to the sign-in page or any other desired page
