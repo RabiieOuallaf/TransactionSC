@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection,QueryFn } from '@angular/fire/compat/firestore';
 import { user } from './../models/interfaces.type'
 import { map,switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable, of,take } from 'rxjs';
+
 
 
 import 'firebase/compat/firestore';
@@ -29,7 +30,6 @@ export class DataService {
   }
   getUserSessions(userUid: string) {
 
-
     return this.fireStore.collection('sessions', ref =>
       ref.where('accountId', '==', userUid)
     )
@@ -49,64 +49,85 @@ export class DataService {
         if (sessions.length > 0) {
           const sessionId = sessions[0].id;
           return this.fireStore
-            .collection(`sessions/${sessionId}/transactions`)
-            .valueChanges();
-        } else {
+          .collection(`sessions/${sessionId}/transactions`, ref => ref.orderBy('Date', 'desc'))
+          .valueChanges();
+        } else {  
           return of([]); // Return an empty array if no session found for the user
         }
       })
     );
   }
-  
-  createTransaction(amount: number, sequence: number,title : string, type : string) {
-    const userId = localStorage.getItem('currentAccount') || '';
-    const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Get a reference to a new session document with an auto-generated ID
-    const transactionCollectionReference = sessionReference.collection('transactions');
-    const transactionMaker = localStorage.getItem('currentAccount');
-    const transactionData = {
-      amount: amount,
-      sequence : sequence,
-      title: title,
-      type : type,
-      transactionMaker : transactionMaker
+
+  createSession(accountId : string , date: Date) {
+    const sessionData = {
+      accountId : accountId,
+      date : date,
+      state : 0,
     }
 
-
-
-    transactionCollectionReference.add(transactionData)
-      .then(() => {
-        console.log('Session created seccussfully !')
-        transactionCollectionReference.add(transactionCollectionReference)
-      })
-      .catch(erorr => {
-        console.log(erorr);
-      })
-  }
-    previousTransactions: any[] = [];
-
-  checkTransactionChanges(transactionMaker: string) {
-    this.getUserTransactions(transactionMaker).subscribe(transactions => {
-      const hasChanges = this.transactionsChanged(transactions);
-      if (hasChanges) {
-        console.warn('Warning: Transactions have been updated for account:', transactionMaker);
-      }
-      this.previousTransactions = transactions;
+    return new Observable<void>((observer) => {
+      this.fireStore.collection('sessions').add(sessionData)
+        .then(() => {
+          console.log('Session created successfully');
+          observer.next();
+          observer.complete();
+        })
+        .catch((error) => {
+          console.error('Error creating session:', error);
+          observer.error(error);
+        });
     });
   }
-
-  transactionsChanged(currentTransactions: any[]): boolean {
-    if (this.previousTransactions.length !== currentTransactions.length) {
-      return true;
-    }
-
-    for (let i = 0; i < currentTransactions.length; i++) {
-      if (JSON.stringify(currentTransactions[i]) !== JSON.stringify(this.previousTransactions[i])) {
-        return true;
-      }
-    }
-
-    return false;
+  
+  createTransaction(amount: number, sequence: number, title: string, type: string) {
+    const transactionMaker = localStorage.getItem('currentAccount') || '';
+  
+    this.getUserSessions(transactionMaker).pipe(
+      take(1),
+      switchMap((sessions) => {
+        if (sessions.length > 0) {
+          const sessionId = sessions[0].id;
+          const sessionReference = this.fireStore.collection('sessions').doc(sessionId);
+          const transactionCollectionReference = sessionReference.collection('transactions');
+          const transactionData = {
+            amount: amount,
+            sequence: sequence,
+            title: title,
+            type: type,
+            Date: new Date(),
+            transactionMaker: transactionMaker
+          };
+  
+          return transactionCollectionReference.add(transactionData);
+        } else {
+          return this.createSession(transactionMaker, new Date()).pipe(
+            switchMap(() => {
+              const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Update with the actual dynamic session ID
+              const transactionCollectionReference = sessionReference.collection('transactions');
+              const transactionData = {
+                amount: amount,
+                sequence: sequence,
+                title: title,
+                type: type,
+                Date: new Date(),
+                transactionMaker: transactionMaker
+              };
+  
+              return transactionCollectionReference.add(transactionData);
+            })
+      )}
+      })
+      ).subscribe({
+        next: () => {
+          console.log('Transaction created successfully');
+        },
+        error: (error) => {
+          console.error('Error creating transaction:', error);
+        }
+      });
   }
+  
+    
 
 
 }

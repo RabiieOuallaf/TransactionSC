@@ -1,7 +1,19 @@
 .container {
-    width: 1300px;
+    width: 810px;
     margin: auto;
     position: relative;
+}
+
+.current-date {
+    text-align: center;
+    background-color: #6a0fe2;
+    color: white;
+    padding: 10px;
+}
+
+.current-date:hover {
+    background-color: #8f3bfd;
+    transition: all 400ms ease-in;
 }
 
 .acounts-list-background {
@@ -29,8 +41,7 @@
     z-index: 2;
 }
 
-.account
-{
+.account {
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -40,14 +51,13 @@
     margin: 5px;
 
 }
-.account:hover 
-{
+
+.account:hover {
     background-color: #eaf0ff;
 
 }
 
-.close-accounts-list
-{
+.close-accounts-list {
     font-size: 22px;
     color: rgb(254, 60, 60);
     display: flex;
@@ -58,7 +68,7 @@
 .sold {
     border: 1px solid;
     border-radius: 10px;
-    width: 100px;
+    width: fit-content;
     padding: 4px;
     text-align: center;
     cursor: pointer;
@@ -75,17 +85,41 @@
 
 .operations {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
+    margin-top: 30px;
 }
 
 .accounts {
     border: 1px solid;
     border-radius: 10px;
     width: 100px;
-    padding: 4px;
+    padding: 7px;
     text-align: center;
     cursor: pointer;
+    background-color: #6a0fe2;
+    color: white;
+}
+
+.accounts:hover {
+    background-color: #8f3bfd;
+    transition: all 200ms ease-in;
+}
+
+.transactions {
+    border: 1px solid;
+    border-radius: 10px;
+    width: 130px;
+    padding: 7px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #6a0fe2;
+    color: white;
+}
+
+.transactions:hover {
+    background-color: #8f3bfd;
+    transition: all 200ms ease-in;
 }
 
 .accounts span {
@@ -93,16 +127,32 @@
     font-size: 16px;
 }
 
-.accounts span:hover {
-    color: rgb(123, 123, 255);
-}
+
 
 .transaction-table {
     width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 2rem;
+}
 
+.transaction-reverse {
+    transform: translate(44%, 40%);
+    margin: 2rem;
+}
+.transaction-reverse button{
+    background-color: #3898ff;
+    color: white;
+    width: 130px;
+    padding: 7px;
+    border: 1px solid;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.transaction-reverse button:hover 
+{
+    background-color: #2072c9;
+    transition: all 300ms linear;
 }
 
 .transaction-table table {
@@ -137,8 +187,7 @@
     color: rgb(248, 53, 53);
 }
 
-.transaction-menu 
-{
+.transaction-menu {
     position: fixed;
     top: 50%;
     max-width: 550px;
@@ -150,8 +199,8 @@
     border-radius: 5px;
     z-index: 2;
 }
-.transaction-menu .transaction-info
-{
+
+.transaction-menu .transaction-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -161,38 +210,34 @@
 
 
 }
-    
-.transaction-mode 
-{
+
+.transaction-mode {
     margin: 12px;
 }
-.transaction-mode select 
-{
+
+.transaction-mode select {
     width: 70px;
     text-align: center;
     padding: 4px;
 
 }
 
-.transaction-info .montant input 
-{
-    width: 200px;
-    height: 30px;
-} 
-
-.transaction-info .RIB input
-{
-    width: 200px;
-    height: 30px;
-}
-.transaction-info .title input
-{
+.transaction-info .montant input {
     width: 200px;
     height: 30px;
 }
 
-.transaction-button
-{
+.transaction-info .RIB input {
+    width: 200px;
+    height: 30px;
+}
+
+.transaction-info .title input {
+    width: 200px;
+    height: 30px;
+}
+
+.transaction-button {
     background-color: rgb(65, 189, 65);
     border: none;
     color: white;
@@ -201,14 +246,14 @@
     border-radius: 5px;
     margin: 8px;
     cursor: pointer;
-    
+
 }
-.transaction-button:hover 
-{
+
+.transaction-button:hover {
     background-color: rgb(32, 161, 32);
     transition: all .1s ease-in;
 }
-    
+
 .account-tabs-container {
     display: flex;
     justify-content: flex-end;
@@ -216,7 +261,7 @@
     bottom: 20px;
     left: 20px;
     right: 20px;
-  }
+}
 
 .account-tabs {
     display: flex;
@@ -224,10 +269,10 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    width: 100vw;
-  }
-  
-  .tab {
+    width: 100%;
+}
+
+.tab {
     padding: 8px 16px;
     background-color: #f2f2f2;
     color: #333;
@@ -235,15 +280,14 @@
     text-transform: uppercase;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .tab:hover {
+}
+
+.tab:hover {
     background-color: #e0e0e0;
-  }
-  
-  .tab.active {
+}
+
+.tab.active {
     background-color: #ffffff;
     color: #000;
     border-bottom: 4px solid #0269d8;
-  }
-  
+}
