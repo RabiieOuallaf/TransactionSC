@@ -15,7 +15,6 @@ export class TranscationsComponent {
   displayTransactionMenu: boolean = false;
   displayDepotMenu: boolean = false;
 
-  sold: number = 0;
   userAccounts: any[] = [];
   userTransactions: any[] = [];
   userAccountsTransactionsHistory: any[] = [];
@@ -118,9 +117,9 @@ export class TranscationsComponent {
   makeTransaction() {
 
     if (this.operationType == 'out') {
-      if (this.transactedAmount <= this.sold) {
+      if (this.transactedAmount <= this.totalTransactionAmount) {
 
-        this.sold = this.sold - this.transactedAmount;
+        this.totalTransactionAmount = this.totalTransactionAmount - this.transactedAmount;
         this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType);
 
 
@@ -130,14 +129,30 @@ export class TranscationsComponent {
     }
 
     if (this.operationType == 'in') {
-      this.sold = this.sold + this.transactedAmount;
+      this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
       this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType);
     }
 
   }
+
+  calculateTotalTransactionAmount(): number {
+    let totalAmount = 0;
+  
+    for (const transaction of this.userTransactions) {
+      if (transaction.type === 'in' || transaction.type === 'Depot') {
+        totalAmount += transaction.amount;
+      } else if (transaction.type === 'out') {
+        totalAmount -= transaction.amount;
+      }
+    }
+  
+    return totalAmount;
+  }
+
+
   // separating the logic of transactions to clean up the code 
   postDepot() {
-    this.sold = this.sold + this.transactedAmount;
+    this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
     this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot');
   }
 
@@ -146,6 +161,8 @@ export class TranscationsComponent {
 
   currentAccount: string = '';
   currentAccountTransactions: string = '';
+
+  totalTransactionAmount : number = 0;
 
   displayUserAccounts() {
     const userString = localStorage.getItem('user');
@@ -195,6 +212,7 @@ export class TranscationsComponent {
         .subscribe(transactions => {
           this.userTransactions = transactions;
           this.hasDepotOperation(transactions);
+          this.totalTransactionAmount = this.calculateTotalTransactionAmount();
           
           // Sort transactions by Date in descending order
           this.userTransactions.sort((a, b) => {
