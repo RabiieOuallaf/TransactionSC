@@ -30,7 +30,6 @@ export class DataService {
   }
   getUserSessions(userUid: string) {
 
-
     return this.fireStore.collection('sessions', ref =>
       ref.where('accountId', '==', userUid)
     )
@@ -83,31 +82,7 @@ export class DataService {
         console.log(erorr);
       })
   }
-    previousTransactions: any[] = [];
-
-  checkTransactionChanges(transactionMaker: string) {
-    this.getUserTransactions(transactionMaker).subscribe(transactions => {
-      const hasChanges = this.transactionsChanged(transactions);
-      if (hasChanges) {
-        console.warn('Warning: Transactions have been updated for account:', transactionMaker);
-      }
-      this.previousTransactions = transactions;
-    });
-  }
-
-  transactionsChanged(currentTransactions: any[]): boolean {
-    if (this.previousTransactions.length !== currentTransactions.length) {
-      return true;
-    }
-
-    for (let i = 0; i < currentTransactions.length; i++) {
-      if (JSON.stringify(currentTransactions[i]) !== JSON.stringify(this.previousTransactions[i])) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+    
 
 
 }

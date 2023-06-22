@@ -189,16 +189,10 @@
             });
     
             this.userAccountsTransactionsHistory.push({ transactionMaker: transactionMaker, transactions });
-            this.transactionsNotification(transactionMaker);
             console.log(this.userTransactions);
           });
       }
     }
-    
-    transactionsNotification(transactionMaker: string) {
-      this.accountsAndTransactions.checkTransactionChanges(transactionMaker);
-    }
-
     isCurrentAccount(accountId: string): boolean {
       return this.currentAccount == accountId;  
     }
