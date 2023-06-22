@@ -189,7 +189,7 @@
                 <td [ngClass]="{'montant-positive' : transaction.type == 'in' , 'montant-negative' : transaction.type == 'out'}">
                     <span *ngIf="transaction.type === 'in'">+</span>
                     <span *ngIf="transaction.type === 'out'">-</span>
-                    {{  transaction.amount | currency: 'DH' }}
+                    {{   transaction.amount  }} DH
                 </td>
                 <td>
                     {{ transaction.Date.toDate().toLocaleString() }}
