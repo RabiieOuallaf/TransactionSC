@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
 import { DatePipe } from '@angular/common';
-import { Observable, map } from 'rxjs';
+import { Observable, combineLatest, forkJoin, map } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-transcations',
@@ -26,7 +27,8 @@ export class TranscationsComponent {
   constructor(
     public auth: AuthService,
     public accountsAndTransactions: DataService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public afs: AngularFirestore
   ) {
 
   }
@@ -121,30 +123,38 @@ export class TranscationsComponent {
     this.RIB = value;
   }
 
+ makeTransaction() {
+  const isRibExist$ = this.checkRIB(this.RIB);
+  const isRibOwnerLoggedIn$ = this.checkRIBOwnerStatus(this.RIB);
 
-
-
-  makeTransaction() {
-    const isRibExist$ = this.checkRIB(this.RIB);
-    isRibExist$.subscribe(isRibExist => {
-      console.log(isRibExist)
-      if (this.operationType == 'out') {
-        if (this.transactedAmount <= this.totalTransactionAmount && isRibExist) {
-          this.totalTransactionAmount = this.totalTransactionAmount - this.transactedAmount;
+  combineLatest([isRibExist$, isRibOwnerLoggedIn$]).subscribe(([isRibExist, isRibOwnerLoggedIn]) => {
+    if (isRibExist && isRibOwnerLoggedIn) {
+      if (this.operationType === 'out') {
+        if (this.transactedAmount <= this.totalTransactionAmount) {
+          this.totalTransactionAmount -= this.transactedAmount;
           this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
         } else {
-          alert('Something went wrong, please check the RIB or your balance!');
+          // Insufficient balance
+          alert('Insufficient balance. Please check your balance.');
         }
-      }
-    
-      if (this.operationType == 'in' && isRibExist) {
-        this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
+      } else if (this.operationType === 'in') {
+        this.totalTransactionAmount += this.transactedAmount;
         this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
-      }else {
-        alert('Something went wrong, please check the RIB or your balance!');
       }
-    });
-  }
+    } else {
+      if (!isRibExist) {
+        // RIB does not exist
+        alert('Invalid RIB. Please check the RIB or your balance.');
+      } else {
+        // RIB owner is not logged in
+        alert('RIB owner is not logged in. Please try again later.');
+      }
+    }
+  });
+}
+
+  
+  
 
   calculateTotalTransactionAmount(): number {
     let totalAmount = 0;
@@ -173,8 +183,18 @@ export class TranscationsComponent {
         const accountNumbers = accounts.map(account => account.account_number);
         return accountNumbers.includes(RIB);
       })
+    ); 
+  }
+  checkRIBOwnerStatus(RIB: number): Observable<boolean> {
+    return this.accountsAndTransactions.getAccountByRib(RIB).valueChanges().pipe(
+      map((collection : any[]) => {
+        if (collection && collection.length > 0) {
+          const account = collection[0];
+          return account.isLoggedIn == true;
+        }
+        return false; // Return false if the collection is empty or undefined
+      })
     );
-    
   }
   // displaying and switching accounts 
   switchedAccountsHistory: any[] = [];

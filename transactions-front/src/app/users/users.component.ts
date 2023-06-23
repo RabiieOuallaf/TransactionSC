@@ -24,6 +24,7 @@ export class UsersComponent implements OnInit {
     displayName: '',
     photoURL: '',
     emailVerified: false,
+    isLoggedIn : true,
   };
 
 
@@ -81,6 +82,7 @@ export class UsersComponent implements OnInit {
       displayName: '', // Add the appropriate value here
       photoURL: '', // Add the appropriate value here
       emailVerified: false, // Add the appropriate value here
+      isLoggedIn : true
     };
 
     this.auth.createUserWithEmailAndPassword(this.selectedUser.email, this.selectedUser.password)
@@ -103,6 +105,7 @@ export class UsersComponent implements OnInit {
           displayName: '',
           photoURL: '',
           emailVerified: false,
+          isLoggedIn : true
         };
         this.closePopup_1();
       })
@@ -143,11 +146,12 @@ export class UsersComponent implements OnInit {
 
   }
 
-  newAccount: Account = { account_number: 0, title: '' };
+  newAccount: Account = { account_number: 0, title: '',isLoggedIn : true};
   createAccount() {
     const account: Account = {
       account_number: this.newAccount.account_number,
-      title: this.newAccount.title
+      title: this.newAccount.title,
+      isLoggedIn : true
     };
 
     const userId = this.selectedUser.uid; // Get the user ID from the selectedUser object
@@ -157,17 +161,19 @@ export class UsersComponent implements OnInit {
         // Account created successfully
         console.log('Account created successfully');
         this.closePopup_2();
-        alert('creating account');
+        alert('account created');
 
         // Reset the newAccount object
         this.newAccount = {
           account_number: 0,
-          title: ''
+          title: '',
+          isLoggedIn : true
+
         };
       })
       .catch((error) => {
         // Handle error
-        console.error('Error creating account:', error);
+        console.error('Error while creating created:', error);
       });
   }
 }

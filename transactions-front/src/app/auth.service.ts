@@ -17,6 +17,7 @@ export class AuthService {
     displayName: '',
     photoURL: '',
     emailVerified: false,
+    isLoggedIn: true
 
   };
   isLoggedIn: boolean = false;
@@ -41,8 +42,8 @@ export class AuthService {
           displayName: '',
           photoURL: '',
           emailVerified: false,
+          isLoggedIn: true
         };
-        this.isLoggedIn = false;
       }
     });
   }
@@ -110,6 +111,7 @@ export class AuthService {
       emailVerified: user.emailVerified,
       name: '',
       password: '',
+      isLoggedIn: true
 
     };
 
@@ -127,10 +129,15 @@ export class AuthService {
   }
 
   SignOut() {
-    
+    const user = this.currentUser; 
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user'); // Remove the 'user' item from localStorage
       this.router.navigate(['login']); // Navigate to the sign-in page or any other desired page
+
+      if (user && user.uid) {
+        const userRef: AngularFirestoreDocument<any> = this.afs.doc<any>(`users/${user.uid}`);
+        userRef.set({ isLoggedIn: false }, { merge: true });
+      }
     });
   }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection,QueryFn } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection,DocumentData,QueryFn } from '@angular/fire/compat/firestore';
 import { user } from './../models/interfaces.type'
 import { map,switchMap } from 'rxjs/operators';
 import { Observable, of,take } from 'rxjs';
@@ -33,7 +33,13 @@ export class DataService {
             .collectionGroup('accounts')
             .valueChanges()
   }
-  getUserSessions(userUid: string) {
+  getAccountByRib(rib: number) {
+    return this.fireStore.collectionGroup('accounts', ref => ref.where('account_number', '==', rib));
+  }
+  
+  
+  
+    getUserSessions(userUid: string) {
 
     return this.fireStore.collection('sessions', ref =>
       ref.where('accountId', '==', userUid)
