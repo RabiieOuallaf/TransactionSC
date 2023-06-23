@@ -71,7 +71,11 @@
                     RIB  : 
                 </span>
                 <br>
-                <input type="number">
+                <input 
+                    #RIB
+                    type="number"
+                    (keyup)="setRIB(+RIB.value)"
+                >
             </div>
 
             <div class="title">
@@ -112,7 +116,7 @@
     </div>
     <!-- === Depot section === -->
     <div class="transaction-menu" [hidden]="!displayDepotMenu"> 
-        <div class="close-accounts-list" (click)="toggleDepotMenu()">
+        <div class="close-accounts-list" (click)="closeDepotMenu()">
             X
         </div>
         <div class="transaction-info">
@@ -171,6 +175,7 @@
               <th>Type</th> 
               <th>Title</th>
               <th>Montant</th>
+              <th>RIB</th>
               <th>Creating date</th>
 
             </tr>
@@ -190,6 +195,9 @@
                     <span *ngIf="transaction.type === 'in'">+</span>
                     <span *ngIf="transaction.type === 'out'">-</span>
                     {{   transaction.amount  }} DH
+                </td>
+                <td>
+                    {{ transaction.RIB }}
                 </td>
                 <td>
                     {{ transaction.Date.toDate().toLocaleString() }}

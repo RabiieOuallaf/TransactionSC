@@ -28,6 +28,11 @@ export class DataService {
       .collection(`users/${userUid}/accounts`)
       .valueChanges();
   }
+  getAllUsersAccounts() {
+    return this.fireStore 
+            .collectionGroup('accounts')
+            .valueChanges()
+  }
   getUserSessions(userUid: string) {
 
     return this.fireStore.collection('sessions', ref =>
@@ -79,7 +84,7 @@ export class DataService {
     });
   }
   
-  createTransaction(amount: number, sequence: number, title: string, type: string) {
+  createTransaction(amount: number, sequence: number, title: string, type: string, RIB : number) {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
   
     this.getUserSessions(transactionMaker).pipe(
@@ -95,7 +100,8 @@ export class DataService {
             title: title,
             type: type,
             Date: new Date(),
-            transactionMaker: transactionMaker
+            transactionMaker: transactionMaker,
+            RIB : RIB
           };
   
           return transactionCollectionReference.add(transactionData);
@@ -110,7 +116,9 @@ export class DataService {
                 title: title,
                 type: type,
                 Date: new Date(),
-                transactionMaker: transactionMaker
+                transactionMaker: transactionMaker,
+                RIB : RIB
+
               };
   
               return transactionCollectionReference.add(transactionData);

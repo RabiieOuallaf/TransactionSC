@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
 import { DatePipe } from '@angular/common';
+import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-transcations',
@@ -57,6 +58,7 @@ export class TranscationsComponent {
 
 
 
+
   // ==== Toggle methods ==== //
 
   toggleAccountList() {
@@ -70,6 +72,9 @@ export class TranscationsComponent {
   }
   closeDepotMenu() {
     this.displayDepotMenu = false;
+   
+  }
+  removeDepotMenuButton() {
     const depotMenu = document.getElementById('depotMenuButton');
     if (depotMenu) {
       depotMenu.style.display = 'none';
@@ -83,7 +88,7 @@ export class TranscationsComponent {
       if (depotMenu) {
         depotMenu.style.display = 'none';
       }
-    }else {
+    } else {
       const depotMenu = document.getElementById('depotMenuButton');
       if (depotMenu) {
         depotMenu.style.display = 'block';
@@ -98,6 +103,7 @@ export class TranscationsComponent {
   transactedAmount: number = 0;
   operationType: string = 'in';
   operationTitle: string = '';
+  RIB: number = 0;
 
   setTransactedAmount(value: number) {
     this.transactedAmount = value;
@@ -111,33 +117,38 @@ export class TranscationsComponent {
     this.operationTitle = value;
   }
 
+  setRIB(value: number) {
+    this.RIB = value;
+  }
+
 
 
 
   makeTransaction() {
-
-    if (this.operationType == 'out') {
-      if (this.transactedAmount <= this.totalTransactionAmount) {
-
-        this.totalTransactionAmount = this.totalTransactionAmount - this.transactedAmount;
-        this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType);
-
-
-      } else {
-        alert('Something went wrong');
+    const isRibExist$ = this.checkRIB(this.RIB);
+    isRibExist$.subscribe(isRibExist => {
+      console.log(isRibExist)
+      if (this.operationType == 'out') {
+        if (this.transactedAmount <= this.totalTransactionAmount && isRibExist) {
+          this.totalTransactionAmount = this.totalTransactionAmount - this.transactedAmount;
+          this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
+        } else {
+          alert('Something went wrong, please check the RIB or your balance!');
+        }
       }
-    }
-
-    if (this.operationType == 'in') {
-      this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
-      this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType);
-    }
-
+    
+      if (this.operationType == 'in' && isRibExist) {
+        this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
+        this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
+      }else {
+        alert('Something went wrong, please check the RIB or your balance!');
+      }
+    });
   }
 
   calculateTotalTransactionAmount(): number {
     let totalAmount = 0;
-  
+
     for (const transaction of this.userTransactions) {
       if (transaction.type === 'in' || transaction.type === 'Depot') {
         totalAmount += transaction.amount;
@@ -145,7 +156,7 @@ export class TranscationsComponent {
         totalAmount -= transaction.amount;
       }
     }
-  
+
     return totalAmount;
   }
 
@@ -153,16 +164,25 @@ export class TranscationsComponent {
   // separating the logic of transactions to clean up the code 
   postDepot() {
     this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
-    this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot');
+    this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot', 0);
   }
 
+  checkRIB(RIB: number) :  Observable<boolean>{
+    return this.accountsAndTransactions.getAllUsersAccounts().pipe(
+      map((accounts: any[]) => {
+        const accountNumbers = accounts.map(account => account.account_number);
+        return accountNumbers.includes(RIB);
+      })
+    );
+    
+  }
   // displaying and switching accounts 
   switchedAccountsHistory: any[] = [];
 
   currentAccount: string = '';
   currentAccountTransactions: string = '';
 
-  totalTransactionAmount : number = 0;
+  totalTransactionAmount: number = 0;
 
   displayUserAccounts() {
     const userString = localStorage.getItem('user');
@@ -171,7 +191,7 @@ export class TranscationsComponent {
 
     this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
       this.userAccounts = accounts;
-      
+
       this.currentAccount = this.userAccounts[0].account_number;
 
     });
@@ -213,7 +233,7 @@ export class TranscationsComponent {
           this.userTransactions = transactions;
           this.hasDepotOperation(transactions);
           this.totalTransactionAmount = this.calculateTotalTransactionAmount();
-          
+
           // Sort transactions by Date in descending order
           this.userTransactions.sort((a, b) => {
             const dateA = new Date(a.Date);
