@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
 import { DatePipe } from '@angular/common';
-import { Observable, combineLatest, forkJoin, map } from 'rxjs';
+import { Observable, combineLatest, forkJoin, map, take } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
@@ -128,43 +128,39 @@ export class TranscationsComponent {
   }
   activeAccountNumbers: any[] = [];
 
- makeTransaction() {
-  const isRibExist$ = this.checkRIB(this.RIB);
-  const isRibOwnerLoggedIn$ = this.checkRIBOwnerStatus(this.RIB);
-
-  combineLatest([isRibExist$, isRibOwnerLoggedIn$]).subscribe(([isRibExist, isRibOwnerLoggedIn]) => {
-    if (isRibExist && isRibOwnerLoggedIn) {
-      if (this.operationType === 'out') {
-        if (this.transactedAmount <= this.totalTransactionAmount) {
-          this.totalTransactionAmount -= this.transactedAmount;
+  makeTransaction() {
+    const isRibExist$ = this.checkRIB(this.RIB);
+  
+    isRibExist$.pipe(take(1)).subscribe((isRibExist) => {
+      if (isRibExist) {
+        if (this.operationType == 'out') {
+          if (this.transactedAmount <= this.totalTransactionAmount) {
+            this.totalTransactionAmount -= this.transactedAmount;
+            this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
+          } else {
+            // Insufficient balance
+            alert('Insufficient balance. Please check your balance.');
+          }
+        } else if (this.operationType == 'in') {
+          this.totalTransactionAmount += this.transactedAmount;
           this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
-        } else {
-          // Insufficient balance
-          alert('Insufficient balance. Please check your balance.');
         }
-      } else if (this.operationType === 'in') {
-        this.totalTransactionAmount += this.transactedAmount;
-        this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, this.operationType, this.RIB);
-      }
-    } else {
-      if (!isRibExist) {
+      } else {
         // RIB does not exist
         alert('Invalid RIB. Please check the RIB or your balance.');
-      } else {
-        // RIB owner is not logged in
-
-        this.accountsAndTransactions.getActiveAccounts().valueChanges().subscribe((accounts : any[]) => {
+  
+        this.accountsAndTransactions.getActiveAccounts().valueChanges().subscribe((accounts: any[]) => {
           this.activeAccountNumbers = accounts.map(account => account.account_number);
-          if(this.activeAccountNumbers.length > 0) {
+          if (this.activeAccountNumbers.length > 0) {
             this.toggleActiveAccountList();
             this.toggleTransactionMenu();
           }
         });
         alert('RIB owner is not logged in. Please try again later.');
       }
-    }
-  });
-}
+    });
+  }
+  
 
   
   
@@ -225,7 +221,6 @@ export class TranscationsComponent {
     this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
       this.userAccounts = accounts;
 
-      this.currentAccount = this.userAccounts[0].account_number;
 
     });
   }
