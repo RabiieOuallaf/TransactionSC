@@ -16,6 +16,7 @@ export class TranscationsComponent {
   displayAccountList: boolean = false;
   displayTransactionMenu: boolean = false;
   displayDepotMenu: boolean = false;
+  displayActiveAccountList : boolean = false;
 
   userAccounts: any[] = [];
   userTransactions: any[] = [];
@@ -65,6 +66,9 @@ export class TranscationsComponent {
 
   toggleAccountList() {
     this.displayAccountList = !this.displayAccountList;
+  }
+  toggleActiveAccountList() {
+    this.displayActiveAccountList = !this.displayActiveAccountList;
   }
   toggleTransactionMenu() {
     this.displayTransactionMenu = !this.displayTransactionMenu;
@@ -122,6 +126,7 @@ export class TranscationsComponent {
   setRIB(value: number) {
     this.RIB = value;
   }
+  activeAccountNumbers: any[] = [];
 
  makeTransaction() {
   const isRibExist$ = this.checkRIB(this.RIB);
@@ -147,6 +152,14 @@ export class TranscationsComponent {
         alert('Invalid RIB. Please check the RIB or your balance.');
       } else {
         // RIB owner is not logged in
+
+        this.accountsAndTransactions.getActiveAccounts().valueChanges().subscribe((accounts : any[]) => {
+          this.activeAccountNumbers = accounts.map(account => account.account_number);
+          if(this.activeAccountNumbers.length > 0) {
+            this.toggleActiveAccountList();
+            this.toggleTransactionMenu();
+          }
+        });
         alert('RIB owner is not logged in. Please try again later.');
       }
     }
@@ -241,6 +254,10 @@ export class TranscationsComponent {
       (account: any, index: number, self: any[]) =>
         index === self.findIndex((a: any) => a.account_id == account.account_id)
     );
+    const userString = localStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+    const userId = user?.uid;
+    this.accountsAndTransactions.setSubAccountLoggedIn(switchedAccountId,userId);
 
   }
   // display transactions

@@ -26,6 +26,8 @@
     <div class="acounts-list-background" [hidden]="!displayAccountList"></div>
     <div class="acounts-list-background" [hidden]="!displayTransactionMenu"></div>
     <div class="acounts-list-background" [hidden]="!displayDepotMenu"></div>
+    <div class="acounts-list-background" [hidden]="!displayActiveAccountList"></div>
+
     
 
     <div class="accounts-list" [hidden]="!displayAccountList">
@@ -45,7 +47,25 @@
             >
         </div>
         
-    </div> 
+    </div>
+    
+    <div class="accounts-list" [hidden]="!displayActiveAccountList">
+        <div class="close-accounts-list" (click)="toggleActiveAccountList()">
+            X
+        </div>
+        <div 
+            class="account" 
+            *ngFor="let account of activeAccountNumbers">
+            
+            <span>{{account}}</span> 
+            <img 
+                src="../../assets/icons/right-arrow.png" 
+                alt="right arrow"
+                style="width: 30px;cursor: pointer;"
+            >
+        </div>
+        
+    </div>
     
     
     <div class="transaction-menu" [hidden]="!displayTransactionMenu">

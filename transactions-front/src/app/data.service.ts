@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection,DocumentData,QueryFn } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument,DocumentData,QueryFn } from '@angular/fire/compat/firestore';
 import { user } from './../models/interfaces.type'
 import { map,switchMap } from 'rxjs/operators';
-import { Observable, of,take } from 'rxjs';
+import { Observable, firstValueFrom, of,take } from 'rxjs';
 
 
 
@@ -36,7 +36,21 @@ export class DataService {
   getAccountByRib(rib: number) {
     return this.fireStore.collectionGroup('accounts', ref => ref.where('account_number', '==', rib));
   }
+  getActiveAccounts() {
+    return this.fireStore.collectionGroup('accounts', accounts => accounts.where('isLoggedIn', '==', true));
+  }
   
+  async setSubAccountLoggedIn(accountId: string,userUid : string): Promise<void> {
+    const accountRef = this.fireStore.collection(`users/${userUid}/accounts`, ref => ref.where('account_number', '==', accountId));
+    const querySnapshot = await firstValueFrom(accountRef.get());
+  
+    if (!querySnapshot.empty) {
+      const docRef = querySnapshot.docs[0].ref;
+      await docRef.update({ isLoggedIn: true });
+    } else {
+      throw new Error(`Sub-account with accountId ${accountId} not found.`);
+    }
+  }
   
   
     getUserSessions(userUid: string) {
