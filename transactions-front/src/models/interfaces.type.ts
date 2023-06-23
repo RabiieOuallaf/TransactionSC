@@ -15,13 +15,14 @@ export interface user {
     displayName: string;
     photoURL: string;
     emailVerified: boolean;
-  
+    isLoggedIn: boolean
   }
   
   export interface Account {
     id?: string;
     account_number: number;
     title: string;
+    isLoggedIn : boolean
   }
   
   export interface Session {

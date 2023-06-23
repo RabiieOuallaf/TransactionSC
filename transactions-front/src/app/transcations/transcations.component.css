@@ -164,7 +164,7 @@
 .transaction-table th,
 .transaction-table td {
     padding: 8px;
-    text-align: left;
+    text-align: right;
 }
 
 .transaction-table th {

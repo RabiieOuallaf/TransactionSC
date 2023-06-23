@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { UserCredential } from '@firebase/auth-types';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { AuthUser } from 'src/models/interfaces.type';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -17,6 +17,7 @@ export class AuthService {
     displayName: '',
     photoURL: '',
     emailVerified: false,
+    isLoggedIn: true
 
   };
   isLoggedIn: boolean = false;
@@ -41,8 +42,8 @@ export class AuthService {
           displayName: '',
           photoURL: '',
           emailVerified: false,
+          isLoggedIn: true
         };
-        this.isLoggedIn = false;
       }
     });
   }
@@ -110,6 +111,7 @@ export class AuthService {
       emailVerified: user.emailVerified,
       name: '',
       password: '',
+      isLoggedIn: true
 
     };
 
@@ -127,12 +129,26 @@ export class AuthService {
   }
 
   SignOut() {
-    
+    const user = this.currentUser;
     return this.afAuth.signOut().then(() => {
-      localStorage.removeItem('user'); // Remove the 'user' item from localStorage
-      this.router.navigate(['login']); // Navigate to the sign-in page or any other desired page
+      localStorage.removeItem('user');
+      this.router.navigate(['login']);
+  
+      if (user && user.uid) {
+        const userRef: AngularFirestoreDocument<any> = this.afs.doc<any>(`users/${user.uid}`);
+        userRef.set({ isLoggedIn: false }, { merge: true });
+  
+        const accountsCollectionRef: AngularFirestoreCollection<any> = userRef.collection('accounts');
+        accountsCollectionRef.get().toPromise().then(snapshot => {
+          snapshot?.docs.forEach(doc => {
+            const accountRef: AngularFirestoreDocument<any> = accountsCollectionRef.doc(doc.id);
+            accountRef.set({ isLoggedIn: false }, { merge: true });
+          });
+        });
+      }
     });
   }
+  
 
 
   getUser() {

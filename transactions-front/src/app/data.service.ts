@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection,QueryFn } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument,DocumentData,QueryFn } from '@angular/fire/compat/firestore';
 import { user } from './../models/interfaces.type'
 import { map,switchMap } from 'rxjs/operators';
-import { Observable, of,take } from 'rxjs';
+import { Observable, firstValueFrom, of,take } from 'rxjs';
 
 
 
@@ -28,7 +28,32 @@ export class DataService {
       .collection(`users/${userUid}/accounts`)
       .valueChanges();
   }
-  getUserSessions(userUid: string) {
+  getAllUsersAccounts() {
+    return this.fireStore 
+            .collectionGroup('accounts')
+            .valueChanges()
+  }
+  getAccountByRib(rib: number) {
+    return this.fireStore.collectionGroup('accounts', ref => ref.where('account_number', '==', rib));
+  }
+  getActiveAccounts() {
+    return this.fireStore.collectionGroup('accounts', accounts => accounts.where('isLoggedIn', '==', true));
+  }
+  
+  async setSubAccountLoggedIn(accountId: string,userUid : string): Promise<void> {
+    const accountRef = this.fireStore.collection(`users/${userUid}/accounts`, ref => ref.where('account_number', '==', accountId));
+    const querySnapshot = await firstValueFrom(accountRef.get());
+  
+    if (!querySnapshot.empty) {
+      const docRef = querySnapshot.docs[0].ref;
+      await docRef.update({ isLoggedIn: true });
+    } else {
+      throw new Error(`Sub-account with accountId ${accountId} not found.`);
+    }
+  }
+  
+  
+    getUserSessions(userUid: string) {
 
     return this.fireStore.collection('sessions', ref =>
       ref.where('accountId', '==', userUid)
@@ -79,7 +104,7 @@ export class DataService {
     });
   }
   
-  createTransaction(amount: number, sequence: number, title: string, type: string) {
+  createTransaction(amount: number, sequence: number, title: string, type: string, RIB : number) {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
   
     this.getUserSessions(transactionMaker).pipe(
@@ -95,7 +120,8 @@ export class DataService {
             title: title,
             type: type,
             Date: new Date(),
-            transactionMaker: transactionMaker
+            transactionMaker: transactionMaker,
+            RIB : RIB
           };
   
           return transactionCollectionReference.add(transactionData);
@@ -110,7 +136,9 @@ export class DataService {
                 title: title,
                 type: type,
                 Date: new Date(),
-                transactionMaker: transactionMaker
+                transactionMaker: transactionMaker,
+                RIB : RIB
+
               };
   
               return transactionCollectionReference.add(transactionData);
