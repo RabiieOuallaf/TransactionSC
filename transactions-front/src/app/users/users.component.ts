@@ -25,6 +25,7 @@ export class UsersComponent implements OnInit {
     photoURL: '',
     emailVerified: false,
     isLoggedIn : true,
+    role : '',
   };
 
 
@@ -82,7 +83,8 @@ export class UsersComponent implements OnInit {
       displayName: '', // Add the appropriate value here
       photoURL: '', // Add the appropriate value here
       emailVerified: false, // Add the appropriate value here
-      isLoggedIn : true
+      isLoggedIn : true,
+      role : 'user'
     };
 
     this.auth.createUserWithEmailAndPassword(this.selectedUser.email, this.selectedUser.password)
@@ -105,7 +107,8 @@ export class UsersComponent implements OnInit {
           displayName: '',
           photoURL: '',
           emailVerified: false,
-          isLoggedIn : true
+          isLoggedIn : true,
+          role : 'user'
         };
         this.closePopup_1();
       })

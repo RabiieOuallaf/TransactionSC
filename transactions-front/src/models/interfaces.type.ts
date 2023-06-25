@@ -15,7 +15,8 @@ export interface user {
     displayName: string;
     photoURL: string;
     emailVerified: boolean;
-    isLoggedIn: boolean
+    isLoggedIn: boolean;
+    role : string;
   }
   
   export interface Account {

@@ -222,12 +222,17 @@ export class TranscationsComponent {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
     const userId = user?.uid;
+    const userRole = user?.role;
+    if(userRole == 'user') {
 
-    this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
-      this.userAccounts = accounts;
-
-
-    });
+      this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
+        this.userAccounts = accounts;
+      });
+    }else if(userRole == 'admin') {
+      this.accountsAndTransactions.getAllUsersAccounts().subscribe((accounts) => {
+        this.userAccounts = accounts;
+      })
+    }
   }
 
   switchUserAccounts(switchedAccountId: string, switchedAccountName: string) {
