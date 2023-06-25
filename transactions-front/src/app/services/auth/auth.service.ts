@@ -17,7 +17,8 @@ export class AuthService {
     displayName: '',
     photoURL: '',
     emailVerified: false,
-    isLoggedIn: true
+    isLoggedIn: true,
+    role : ''
 
   };
   isLoggedIn: boolean = false;
@@ -33,6 +34,7 @@ export class AuthService {
         const userData = JSON.parse(localStorage.getItem('user')!);
         this.currentUser = userData ? userData : this.currentUser;
         this.isLoggedIn = true;
+        
       } else {
         this.currentUser = {
           uid: '',
@@ -42,7 +44,8 @@ export class AuthService {
           displayName: '',
           photoURL: '',
           emailVerified: false,
-          isLoggedIn: true
+          isLoggedIn: true,
+          role :''
         };
       }
     });
@@ -103,17 +106,19 @@ export class AuthService {
 
   SetUserData(user: any) {
     const userRef: AngularFirestoreDocument<AuthUser> = this.afs.doc<AuthUser>(`users/${user.uid}`);
-    const userData: AuthUser = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-      name: '',
-      password: '',
-      isLoggedIn: true
-
-    };
+    userRef.get().subscribe((snapshot: any) => { // Add type annotation 'any' to the snapshot parameter
+      const userData: AuthUser = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        emailVerified: user.emailVerified,
+        name: '',
+        password: '',
+        isLoggedIn: true,
+        role: snapshot.data()?.role || 'user',
+      };
+    
 
     if (user.displayName) {
       userData.name = user.displayName; // Assign user.displayName to userData.name
@@ -124,9 +129,11 @@ export class AuthService {
     userRef.set(userData, {
       merge: true,
     });
-
     localStorage.setItem('user', JSON.stringify(userData)); // Store user data in localStorage
+  });
+  
   }
+
 
   SignOut() {
     const user = this.currentUser;

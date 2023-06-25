@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
-import { DataService } from '../data.service';
+import { AuthService } from '../services/auth/auth.service';
+import { DataService } from '../services/transactions/data.service';
 import { DatePipe } from '@angular/common';
-import { Observable, combineLatest, forkJoin, map, take } from 'rxjs';
+import { Observable, combineLatest, map, take } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
@@ -52,17 +52,15 @@ export class TranscationsComponent {
   reverseTransactions() {
     this.userTransactions.reverse();
   }
+  
+  // ==== Toggle methods ==== //
   toggleReverseTransactionsButtonLabel() {
     if (this.reverseTransactionLabel == 'oldest-newst') {
       this.reverseTransactionLabel = 'newst-oldest';
+    }else if (this.reverseTransactionLabel == 'newst-oldest'){
+      this.reverseTransactionLabel = 'oldest-newst';
     }
-    this.reverseTransactionLabel = 'oldest-newst';
   }
-
-
-
-
-  // ==== Toggle methods ==== //
 
   toggleAccountList() {
     this.displayAccountList = !this.displayAccountList;
@@ -80,6 +78,9 @@ export class TranscationsComponent {
     this.displayDepotMenu = false;
    
   }
+
+  /* == Depot methods == */
+
   removeDepotMenuButton() {
     const depotMenu = document.getElementById('depotMenuButton');
     if (depotMenu) {
@@ -87,7 +88,6 @@ export class TranscationsComponent {
     }
   }
   hasDepotOperation(userTransactions: any[]) {
-    console.log(userTransactions);
     const hasDepotOperation = userTransactions.length > 0 ? userTransactions.some(transaction => transaction.type == 'Depot') : false;
     if (hasDepotOperation) {
       const depotMenu = document.getElementById('depotMenuButton');
@@ -105,11 +105,12 @@ export class TranscationsComponent {
 
 
 
-  // ==== Transaction methods ==== //
+  // ==== setting values of transaction methods ==== //
   transactedAmount: number = 0;
   operationType: string = 'in';
   operationTitle: string = '';
   RIB: number = 0;
+  activeAccountNumbers: any[] = [];
 
   setTransactedAmount(value: number) {
     this.transactedAmount = value;
@@ -126,7 +127,6 @@ export class TranscationsComponent {
   setRIB(value: number) {
     this.RIB = value;
   }
-  activeAccountNumbers: any[] = [];
 
   makeTransaction() {
     const isRibExist$ = this.checkRIB(this.RIB);
@@ -167,9 +167,7 @@ export class TranscationsComponent {
   }
   
 
-  
-  
-
+  // Getting the total sold of each user 
   calculateTotalTransactionAmount(): number {
     let totalAmount = 0;
 
@@ -190,6 +188,8 @@ export class TranscationsComponent {
     this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
     this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot', 0);
   }
+
+  // RIB validation
 
   checkRIB(RIB: number) :  Observable<boolean>{
     return this.accountsAndTransactions.getAllUsersAccounts().pipe(
@@ -222,12 +222,17 @@ export class TranscationsComponent {
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
     const userId = user?.uid;
+    const userRole = user?.role;
+    if(userRole == 'user') {
 
-    this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
-      this.userAccounts = accounts;
-
-
-    });
+      this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
+        this.userAccounts = accounts;
+      });
+    }else if(userRole == 'admin') {
+      this.accountsAndTransactions.getAllUsersAccounts().subscribe((accounts) => {
+        this.userAccounts = accounts;
+      })
+    }
   }
 
   switchUserAccounts(switchedAccountId: string, switchedAccountName: string) {

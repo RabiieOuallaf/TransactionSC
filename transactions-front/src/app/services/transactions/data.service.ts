@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument,DocumentData,QueryFn } from '@angular/fire/compat/firestore';
-import { user } from './../models/interfaces.type'
+import { user } from '../../../models/interfaces.type'
 import { map,switchMap } from 'rxjs/operators';
 import { Observable, firstValueFrom, of,take } from 'rxjs';
 
