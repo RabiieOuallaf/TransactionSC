@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { DataService } from '../data.service';
+import { DataService } from '../services/transactions/data.service';
 import { map } from 'rxjs/operators';
 
 @Component({
