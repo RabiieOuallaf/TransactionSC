@@ -201,9 +201,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let transaction of userTransactions">
+            <tr *ngFor="let transaction of userTransactions; let index = index">
                 <td>
-                    {{ transaction.sequence }}
+                    {{ (index+1) }}
                 </td>
                 <td>
                     {{ transaction.type }}
@@ -223,6 +223,16 @@
                     {{ transaction.Date.toDate().toLocaleString() }}
                 </td>
             </tr>
+
+            <tr *ngFor="let trs of leftTransactions; let index = index" [ngStyle]="{'background-color': (index+userTransactions.length+1) > 30 ? '#f5cbcb' : ''}">
+                <td>{{ (index+userTransactions.length+1) }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            
 
 
           </tbody>

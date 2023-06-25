@@ -24,6 +24,7 @@ export class DataService {
   }
 
   getUserAccounts(userUid: string) {
+    console.log('userUid', userUid);
     return this.fireStore
       .collection(`users/${userUid}/accounts`)
       .valueChanges();

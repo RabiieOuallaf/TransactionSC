@@ -6,12 +6,14 @@
     <div class="navigation-options">
         <ul>
             <li *ngFor="let option of navigationOptions">
-                <img
+                    <img
                     [src]="option.icon" 
+                    [routerLink]="option.link"
                     alt="Option Icon"
                     width="40px"
                     >
                 {{ option.label }}
+                
               </li>
         </ul>
     </div>

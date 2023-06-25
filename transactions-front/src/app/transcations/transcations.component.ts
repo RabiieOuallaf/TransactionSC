@@ -21,6 +21,7 @@ export class TranscationsComponent {
   userAccounts: any[] = [];
   userTransactions: any[] = [];
   userAccountsTransactionsHistory: any[] = [];
+  leftTransactions: number[] = [];
 
   reverseTransactionLabel = 'oldest-newst'
 
@@ -220,6 +221,7 @@ export class TranscationsComponent {
 
   displayUserAccounts() {
     const userString = localStorage.getItem('user');
+    console.log('userString', userString);
     const user = userString ? JSON.parse(userString) : null;
     const userId = user?.uid;
     const userRole = user?.role;
@@ -275,6 +277,16 @@ export class TranscationsComponent {
           this.userTransactions = transactions;
           this.hasDepotOperation(transactions);
           this.totalTransactionAmount = this.calculateTotalTransactionAmount();
+
+          this.leftTransactions = [];
+
+          if (this.userTransactions.length<35) {
+            for (let i = (this.userTransactions.length+1); i <= 35; i++) {
+              this.leftTransactions.push(i);
+            }
+          }
+
+          
 
           // Sort transactions by Date in descending order
           this.userTransactions.sort((a, b) => {

@@ -12,8 +12,8 @@ export class NavbarComponent {
   constructor(public auth: AuthService) {}
 
   navigationOptions = [
-    { label: 'Transactions', icon: '../../../assets/icons/card-payment.png' },
-    { label: 'Users', icon: '../../../assets/icons/team.png' },
+    { label: 'Transactions', icon: '../../../assets/icons/card-payment.png', link : 'transactions' },
+    { label: 'Users', icon: '../../../assets/icons/team.png', link : 'users' },
   ];
 
   getUserEmail() {
