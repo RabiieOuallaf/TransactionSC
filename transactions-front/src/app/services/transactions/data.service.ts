@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument,D
 import { user } from '../../../models/interfaces.type'
 import { map,switchMap } from 'rxjs/operators';
 import { Observable, firstValueFrom, of,take } from 'rxjs';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 import 'firebase/compat/firestore';
@@ -42,7 +42,7 @@ export class DataService {
   }
   
   async setSubAccountLoggedIn(accountId: string,userUid : string): Promise<void> {
-    const accountRef = this.fireStore.collection(`users/${userUid}/accounts`, ref => ref.where('account_number', '==', accountId));
+    const accountRef = this.fireStore.collectionGroup(`accounts`, ref => ref.where('account_number', '==', accountId));
     const querySnapshot = await firstValueFrom(accountRef.get());
   
     if (!querySnapshot.empty) {
@@ -83,6 +83,7 @@ export class DataService {
       })
     );
   }
+  
 
   createSession(accountId : string , date: Date) {
     const sessionData = {
@@ -91,7 +92,7 @@ export class DataService {
       state : 0,
     }
 
-    return new Observable<void>((observer) => {
+    return new Observable<string>((observer) => {
       this.fireStore.collection('sessions').add(sessionData)
         .then(() => {
           console.log('Session created successfully');
@@ -122,14 +123,16 @@ export class DataService {
             type: type,
             Date: new Date(),
             transactionMaker: transactionMaker,
-            RIB : RIB
+            RIB : RIB,
+            transactionID :uuidv4(),
+            source : 'manual'
           };
   
           return transactionCollectionReference.add(transactionData);
         } else {
           return this.createSession(transactionMaker, new Date()).pipe(
-            switchMap(() => {
-              const sessionReference = this.fireStore.collection('sessions').doc('czeG6Qjax7n0jyhTJhH5'); // Update with the actual dynamic session ID
+            switchMap((sessionId) => {
+              const sessionReference = this.fireStore.collection('sessions').doc(sessionId); // Update with the actual dynamic session ID
               const transactionCollectionReference = sessionReference.collection('transactions');
               const transactionData = {
                 amount: amount,
@@ -138,7 +141,10 @@ export class DataService {
                 type: type,
                 Date: new Date(),
                 transactionMaker: transactionMaker,
-                RIB : RIB
+                RIB : RIB,
+                transactionID :uuidv4(),
+                source : 'manual'
+
 
               };
   

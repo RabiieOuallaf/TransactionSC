@@ -27,6 +27,8 @@
     <div class="acounts-list-background" [hidden]="!displayTransactionMenu"></div>
     <div class="acounts-list-background" [hidden]="!displayDepotMenu"></div>
     <div class="acounts-list-background" [hidden]="!displayActiveAccountList"></div>
+    <div class="acounts-list-background" [hidden]="!changeTitleInput"></div>
+
 
     
 
@@ -86,7 +88,7 @@
                 (keyup)="setTransactedAmount(+transactedAmount.value)"
                 >
             </div>
-            <div class="RIB">
+            <!-- <div class="RIB">
                 <span >
                     RIB  : 
                 </span>
@@ -96,7 +98,7 @@
                     type="number"
                     (keyup)="setRIB(+RIB.value)"
                 >
-            </div>
+            </div> -->
 
             <div class="title">
                 <span >
@@ -153,16 +155,16 @@
                 (keyup)="setTransactedAmount(+DepotAmount.value)"
                 >
             </div>
-            <div class="RIB">
+            <!-- <div class="RIB">
                 <span >
                     RIB  : 
                 </span>
                 <br>
                 <input type="number">
-            </div>
+            </div> -->
 
-            <div class="title">
-                <span >
+            <div class="title" >
+                <span>
                     Title: 
                 </span>
                 <br>
@@ -184,6 +186,36 @@
             </button>
         </div>
     </div>
+   <!-- Change title --> 
+   <div class="transaction-menu" [hidden]="!changeTitleInput"> 
+    <div class="close-accounts-list" (click)="toggleChangeTitleInput()">
+        X
+    </div>
+    <div class="transaction-info">
+        
+        <div class="title" >
+            <span>
+                Title: 
+            </span>
+            <br>
+            <input 
+                #operationtTtile
+                type="text"
+                (keyup)="setTitle(operationTtile.value)"
+                >
+        </div>
+        .
+
+       
+
+        <button 
+            class="transaction-button" 
+            (click)="toggleChangeTitleInput()">
+
+            Valider
+        </button>
+    </div>
+</div>
     <div class="transaction-reverse">
         <button (click)="reverseTransactions()">{{reverseTransactionLabel }}</button>
     </div>
@@ -196,6 +228,7 @@
               <th>Title</th>
               <th>Montant</th>
               <th>RIB</th>
+              <th>Source</th>
               <th>Creating date</th>
 
             </tr>
@@ -208,7 +241,7 @@
                 <td>
                     {{ transaction.type }}
                 </td>
-                <td>
+                <td (click)="toggleChangeTitleInput()">
                     {{ transaction.title }}
                 </td>
                 <td [ngClass]="{'montant-positive' : transaction.type == 'in' , 'montant-negative' : transaction.type == 'out'}">
@@ -218,6 +251,9 @@
                 </td>
                 <td>
                     {{ transaction.RIB }}
+                </td>
+                <td>
+                    {{ transaction.source ? transaction.source : 'backend' }}
                 </td>
                 <td>
                     {{ transaction.Date.toDate().toLocaleString() }}

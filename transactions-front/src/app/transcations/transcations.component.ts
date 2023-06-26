@@ -17,6 +17,7 @@ export class TranscationsComponent {
   displayTransactionMenu: boolean = false;
   displayDepotMenu: boolean = false;
   displayActiveAccountList : boolean = false;
+  changeTitleInput : boolean = false;
 
   userAccounts: any[] = [];
   userTransactions: any[] = [];
@@ -39,6 +40,7 @@ export class TranscationsComponent {
     this.displayUserAccounts();
     this.displayUserTransactions();
     this.setCurrentDate();
+    this.setRIB();
   }
 
 
@@ -77,7 +79,9 @@ export class TranscationsComponent {
   }
   closeDepotMenu() {
     this.displayDepotMenu = false;
-   
+  }
+  toggleChangeTitleInput() {
+    this.changeTitleInput = !this.changeTitleInput;
   }
 
   /* == Depot methods == */
@@ -110,7 +114,9 @@ export class TranscationsComponent {
   transactedAmount: number = 0;
   operationType: string = 'in';
   operationTitle: string = '';
-  RIB: number = 0;
+  newTitle : string = '';
+  RIB  : number = parseInt(localStorage.getItem('currentUser') || '') ; 
+  
   activeAccountNumbers: any[] = [];
 
   setTransactedAmount(value: number) {
@@ -125,11 +131,16 @@ export class TranscationsComponent {
     this.operationTitle = value;
   }
 
-  setRIB(value: number) {
-    this.RIB = value;
+  setRIB() {
+    this.RIB = parseInt(localStorage.getItem('currentAccount') || '');
+  }
+
+  setTitle(value: string) {
+    this.newTitle = value;
   }
 
   makeTransaction() {
+    this.setRIB();
     const isRibExist$ = this.checkRIB(this.RIB);
     const isRibOwnerLoggedIn$ = this.checkRIBOwnerStatus(this.RIB);
   
@@ -187,7 +198,7 @@ export class TranscationsComponent {
   // separating the logic of transactions to clean up the code 
   postDepot() {
     this.totalTransactionAmount = this.totalTransactionAmount + this.transactedAmount;
-    this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot', 0);
+    this.accountsAndTransactions.createTransaction(this.transactedAmount, 2, this.operationTitle, 'Depot', this.RIB);
   }
 
   // RIB validation
@@ -260,6 +271,7 @@ export class TranscationsComponent {
     this.switchedAccountsHistory = this.switchedAccountsHistory.filter(
       (account: any, index: number, self: any[]) =>
         index === self.findIndex((a: any) => a.account_id == account.account_id)
+
     );
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) : null;
