@@ -238,7 +238,6 @@ export class TranscationsComponent {
     this.currentAccountTransactions = localStorage.getItem('currentAccount') || '';
     this.currentAccount = switchedAccountId;
     localStorage.setItem('currentAccount', switchedAccountId);
-
     this.displayUserTransactions();
     // Check if the account already exists in the history
     const isDuplicate = this.switchedAccountsHistory.some(
@@ -263,7 +262,6 @@ export class TranscationsComponent {
     const userId = user?.uid;
     this.accountsAndTransactions.setSubAccountLoggedIn(switchedAccountId,userId);
 
-    this.toggleAccountList()
 
   }
   // display transactions
