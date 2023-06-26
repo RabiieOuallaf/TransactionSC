@@ -67,6 +67,7 @@ export class TranscationsComponent {
 
   toggleAccountList() {
     this.displayAccountList = !this.displayAccountList;
+    this.displayUserAccounts();
   }
   toggleActiveAccountList() {
     this.displayActiveAccountList = !this.displayActiveAccountList;
@@ -75,7 +76,7 @@ export class TranscationsComponent {
     this.displayTransactionMenu = !this.displayTransactionMenu;
   }
   toggleDepotMenu() {
-    this.displayDepotMenu = !this.displayTransactionMenu;
+    this.displayDepotMenu = !this.displayDepotMenu;
   }
   closeDepotMenu() {
     this.displayDepotMenu = false;
@@ -116,7 +117,7 @@ export class TranscationsComponent {
   operationTitle: string = '';
   newTitle : string = '';
   transactionID : string = '';
-  RIB  : number = parseInt(localStorage.getItem('currentUser') || '') ; 
+  RIB  : string = localStorage.getItem('currentUser') || ''; 
   
   activeAccountNumbers: any[] = [];
 
@@ -133,7 +134,7 @@ export class TranscationsComponent {
   }
 
   setRIB() {
-    this.RIB = parseInt(localStorage.getItem('currentAccount') || '');
+    this.RIB = localStorage.getItem('currentAccount') || '';
   }
 
   setTitle(value: string) {
@@ -220,14 +221,14 @@ export class TranscationsComponent {
     const user = userString ? JSON.parse(userString) : null;
     const userId = user?.uid;
     const userRole = user?.role;
+    const currentAccount = localStorage.getItem('currentAccount');
     if(userRole == 'user') {
 
-      this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts) => {
-        this.userAccounts = accounts;
-      });
+      this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts : any[]) => {
+        this.userAccounts = accounts.filter(account => account.account_number !== currentAccount);})
     }else if(userRole == 'admin') {
-      this.accountsAndTransactions.getAllUsersAccounts().subscribe((accounts) => {
-        this.userAccounts = accounts;
+      this.accountsAndTransactions.getAllUsersAccounts().subscribe((accounts : any[]) => {
+        this.userAccounts = accounts.filter(account => account.account_number !== currentAccount);
       })
     }
   }
@@ -264,6 +265,36 @@ export class TranscationsComponent {
 
   }
   // display transactions
+  displayUserTransactionsByOperationType(type : string) {
+    const transactionMaker = localStorage.getItem('currentAccount') || '';
+
+    if (transactionMaker) {
+      this.accountsAndTransactions.getUserTransactionsByOperationType(transactionMaker,type)
+        .subscribe(transactions => {
+          this.userTransactions = transactions;
+          this.totalTransactionAmount = this.calculateTotalTransactionAmount();
+
+          this.leftTransactions = [];
+
+          if (this.userTransactions.length<35) {
+            for (let i = (this.userTransactions.length+1); i <= 35; i++) {
+              this.leftTransactions.push(i);
+            }
+          }
+
+          
+
+          // Sort transactions by Date in descending order
+          this.userTransactions.sort((a, b) => {
+            const dateA = new Date(a.Date);
+            const dateB = new Date(b.Date);
+            return dateB > dateA ? 1 : -1;
+          });
+
+          this.userAccountsTransactionsHistory.push({ transactionMaker: transactionMaker, transactions });
+        });
+    }
+  }
   displayUserTransactions() {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
 

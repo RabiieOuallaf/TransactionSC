@@ -83,6 +83,21 @@ export class DataService {
       })
     );
   }
+
+  getUserTransactionsByOperationType(userId: string, type: string) {
+    return this.getUserSessions(userId).pipe(
+      switchMap((sessions) => {
+        if (sessions.length > 0) {
+          const sessionId = sessions[0].id;
+          return this.fireStore
+          .collection(`sessions/${sessionId}/transactions`, ref => ref.where('type', '==', type).orderBy('Date', 'desc') )
+          .valueChanges();
+        } else {  
+          return of([]); // Return an empty array if no session found for the user
+        }
+      })
+    );
+  }
   
 
   createSession(accountId : string , date: Date) {
@@ -121,7 +136,7 @@ export class DataService {
       }
     });
   }
-  createTransaction(amount: number, sequence: number, title: string, type: string, RIB : number) {
+  createTransaction(amount: number, sequence: number, title: string, type: string, RIB : string) {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
   
     this.getUserSessions(transactionMaker).pipe(

@@ -149,12 +149,31 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
 .transaction-reverse button:hover 
 {
     background-color: #2072c9;
     transition: all 300ms linear;
 }
+.operation-type-choice {
+    transform: translate(47%, 40%);
+    margin: 2rem;
+}
+.operation-type-choice button{
+    background-color: #3898ff;
+    color: white;
+    width: 40px;
+    padding: 7px;
+    border: 1px solid;
+    border-radius: 10px;
+    cursor: pointer;
+}
 
+.operation-type-choice button:hover 
+{
+    background-color: #2072c9;
+    transition: all 300ms linear;
+}
 .transaction-table table {
     width: 90%;
     max-width: 800px;
