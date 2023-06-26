@@ -39,7 +39,7 @@
             class="account" 
             *ngFor="let account of userAccounts">
             
-            <span>{{account.title}}</span> 
+            <span (click)="switchUserAccounts(account.account_number, account.title)">{{account.title}}</span> 
             <img 
                 src="../../assets/icons/right-arrow.png" 
                 alt="right arrow"
@@ -233,7 +233,7 @@
               <th>Title</th>
               <th>Montant</th>
               <th>RIB</th>
-              <th>Source</th>
+              <!-- <th>Source</th> -->
               <th>Creating date</th>
 
             </tr>
@@ -257,9 +257,9 @@
                 <td>
                     {{ transaction.RIB }}
                 </td>
-                <td>
+                <!-- <td>
                     {{ transaction.source ? transaction.source : 'backend' }}
-                </td>
+                </td> -->
                 <td>
                     {{ transaction.Date.toDate().toLocaleString() }}
                 </td>

@@ -155,7 +155,7 @@ export class DataService {
             transactionMaker: transactionMaker,
             RIB : RIB,
             transactionID :uuidv4(),
-            source : 'manual'
+            source : 2
           };
   
           return transactionCollectionReference.add(transactionData);
@@ -173,9 +173,7 @@ export class DataService {
                 transactionMaker: transactionMaker,
                 RIB : RIB,
                 transactionID :uuidv4(),
-                source : 'manual'
-
-
+                source : 2
               };
   
               return transactionCollectionReference.add(transactionData);

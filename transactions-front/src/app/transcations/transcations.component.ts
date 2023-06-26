@@ -263,6 +263,8 @@ export class TranscationsComponent {
     const userId = user?.uid;
     this.accountsAndTransactions.setSubAccountLoggedIn(switchedAccountId,userId);
 
+    this.toggleAccountList()
+
   }
   // display transactions
   displayUserTransactionsByOperationType(type : string) {
