@@ -105,7 +105,22 @@ export class DataService {
         });
     });
   }
+  updateTransactionTitle(transactionID: string, newTransactionTitle: string): Promise<void> {
+    console.log(transactionID);
+    
+    const transactionCollectionRef = this.fireStore.collectionGroup('transactions', transaction =>
+      transaction.where('transactionID', '==', transactionID)
+    );
   
+    return transactionCollectionRef.get().toPromise().then(querySnapshot => {
+      if (querySnapshot && !querySnapshot.empty) {
+        const transactionDocRef = querySnapshot.docs[0].ref;
+        return transactionDocRef.update({ title: newTransactionTitle });
+      } else {
+        throw new Error('Transaction not found');
+      }
+    });
+  }
   createTransaction(amount: number, sequence: number, title: string, type: string, RIB : number) {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
   

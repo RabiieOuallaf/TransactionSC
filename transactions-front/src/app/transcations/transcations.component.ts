@@ -115,6 +115,7 @@ export class TranscationsComponent {
   operationType: string = 'in';
   operationTitle: string = '';
   newTitle : string = '';
+  transactionID : string = '';
   RIB  : number = parseInt(localStorage.getItem('currentUser') || '') ; 
   
   activeAccountNumbers: any[] = [];
@@ -137,6 +138,13 @@ export class TranscationsComponent {
 
   setTitle(value: string) {
     this.newTitle = value;
+  }
+  setTransactionID(value : string) {
+    this.transactionID = value
+  }
+
+  changeTransactionTitle() {
+    this.accountsAndTransactions.updateTransactionTitle(this.transactionID, this.newTitle);
   }
 
   makeTransaction() {
