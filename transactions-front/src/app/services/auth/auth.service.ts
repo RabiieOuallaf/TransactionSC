@@ -139,6 +139,8 @@ export class AuthService {
     const user = this.currentUser;
     return this.afAuth.signOut().then(() => {
       localStorage.removeItem('user');
+      localStorage.removeItem('currentAccount');
+
       this.router.navigate(['login']);
   
       if (user && user.uid) {
