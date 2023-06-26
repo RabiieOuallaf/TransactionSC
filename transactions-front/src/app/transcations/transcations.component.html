@@ -228,7 +228,7 @@
               <th>Title</th>
               <th>Montant</th>
               <th>RIB</th>
-              <th>Source</th>
+              <!-- <th>Source</th> -->
               <th>Creating date</th>
 
             </tr>
@@ -252,9 +252,9 @@
                 <td>
                     {{ transaction.RIB }}
                 </td>
-                <td>
+                <!-- <td>
                     {{ transaction.source ? transaction.source : 'backend' }}
-                </td>
+                </td> -->
                 <td>
                     {{ transaction.Date.toDate().toLocaleString() }}
                 </td>
