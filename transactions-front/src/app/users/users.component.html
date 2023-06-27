@@ -6,9 +6,10 @@
             <table class="users-table">
                 <thead>
                     <tr>
-                        <th>Utilisateurs</th>
+                        <th>Users</th>
                         <th>Email</th>
                         <th>Action</th>
+                        <th>Account</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,6 +22,10 @@
                             <i class=" b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"
                                 (click)="deleteUser(user)"></i>
                         </td>
+                        <td (click)="toggleAccountsPopup(user)" class="accounts">
+                            <i class="fa-regular fa-user" [ngClass]="{'no-accounts': !showAccountsPopup}"></i>
+                        </td>
+
                     </tr>
                 </tbody>
             </table>
@@ -36,33 +41,34 @@
             <h2>Edit User</h2>
             <form (submit)="updateUser()">
                 <div class="form-edit">
-                  <label for="username">Utilisateur</label>
-                  <input type="text" id="username" name="name" [(ngModel)]="selectedUser.name">
-              
-                  <label for="email">Email</label>
-                  <input type="email" id="email" name="email" [(ngModel)]="selectedUser.email">
-              
-                  <div>
-                    <button type="button" (click)="toggleAddAccountForm()">
-                      {{ isAccountFormVisible ? 'Hide' : 'Add Account' }}
-                    </button>
-                  </div>
-                  
-                  
-                  <div *ngIf="isAccountFormVisible">
-                    <label for="accountNumber">Account Number:</label>
-                    <input type="number" id="accountNumber" name="accountNumber" [(ngModel)]="newAccount.account_number">
-              
-                    <label for="accountTitle">Account Title:</label>
-                    <input type="text" id="accountTitle" name="accountTitle" [(ngModel)]="newAccount.title">
-              
-                    <button type="button" (click)="createAccount()">Save Account</button>
-                  </div>
-              
-                  <button type="submit">Save</button>
+                    <label for="username">Utilisateur</label>
+                    <input type="text" id="username" name="name" [(ngModel)]="selectedUser.name">
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" [(ngModel)]="selectedUser.email">
+
+                    <div>
+                        <button type="button" (click)="toggleAddAccountForm()">
+                            {{ isAccountFormVisible ? 'Hide' : 'Add Account' }}
+                        </button>
+                    </div>
+
+
+                    <div *ngIf="isAccountFormVisible">
+                        <label for="accountNumber">Account Number:</label>
+                        <input type="number" id="accountNumber" name="accountNumber"
+                            [(ngModel)]="newAccount.account_number">
+
+                        <label for="accountTitle">Account Title:</label>
+                        <input type="text" id="accountTitle" name="accountTitle" [(ngModel)]="newAccount.title">
+
+                        <button type="button" (click)="createAccount()">Save Account</button>
+                    </div>
+
+                    <button type="submit">Save</button>
                 </div>
-              </form>
-              
+            </form>
+
         </div>
         <!-- Form and other elements -->
     </div>
@@ -91,5 +97,29 @@
         </div>
         <!-- Form and other elements -->
     </div>
+    <div class="mainPopup-accounts" [ngClass]="{'show': showAccountsPopup}">
+        <div class="popup-accounts" *ngIf="showAccountsPopup">
+            <table>
+                <h3>Accounts</h3>
+
+                <tbody class="accounts-table">
+                    <tr class="accounts-child" *ngFor="let account of accounts">
+                        <td>{{ account.account_number }}</td>
+
+                        <td class="action-B">
+                            <i class="b1 fa-solid fa-pen-to-square fa-sm" style="color: #000000;"></i>
+                            <i class=" b2 fa-solid fa-trash-can fa-sm" style="color: #e41b1b;"></i>
+                        </td>
+
+                    </tr>
+                    <button (click)="closeAccountsPopup()">Close</button>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
 
 </div>

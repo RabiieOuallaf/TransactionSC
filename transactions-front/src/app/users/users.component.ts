@@ -11,6 +11,7 @@ import { Account, AuthUser } from 'src/models/interfaces.type';
 export class UsersComponent implements OnInit {
   popupVisible_1 = false;
   popupVisible_2 = false;
+  showAccountsPopup: boolean = false;
   showAddAccountForm: boolean = false;
   isAccountFormVisible: boolean = false;
   isAccountLimitReached = false;
@@ -26,6 +27,7 @@ export class UsersComponent implements OnInit {
     emailVerified: false,
     isLoggedIn : true,
     role : '',
+  
   };
 
 
@@ -46,8 +48,30 @@ export class UsersComponent implements OnInit {
       // this.showAddAccountForm = !this.isAccountLimitReached;
     });
   }
-
-
+  // hasAccounts(user: AuthUser): Promise<boolean> {
+  //   if (user && user.uid) {
+  //     return this.userService.hasAccounts(user.uid);
+  //   }
+  //   return Promise.resolve(false);
+  // }
+  toggleAccountsPopup(user: AuthUser): void {
+    this.selectedUser = user;
+    if (this.showAccountsPopup) {
+      this.closeAccountsPopup();
+    } else {
+      this.userService.getAccounts(user.uid).subscribe((accounts: Account[]) => {
+        this.accounts = accounts;
+        this.showAccountsPopup = this.accounts.length > 0; // Check if there are any accounts
+      });
+    }
+  }
+  
+  
+  
+  
+  closeAccountsPopup(): void {
+    this.showAccountsPopup = false;
+  }
 
 
 

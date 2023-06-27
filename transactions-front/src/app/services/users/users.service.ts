@@ -66,7 +66,19 @@ export class UsersService {
   }
   
   
-  
+  // hasAccounts(userId: string): Promise<boolean> {
+  //   const userRef = this.firestore.collection('users').doc(userId);
+  //   const accountsRef = userRef.collection('accounts');
+    
+  //   return accountsRef.get().toPromise().then((snapshot) => {
+  //     return snapshot?.empty ?? false;
+  //   });
+  // }
+  getAccounts(userId: string): Observable<any[]> {
+    const userRef = this.firestore.collection('users').doc(userId);
+    const accountsRef = userRef.collection('accounts');
+    return accountsRef.valueChanges();
+  }
   
   
   
