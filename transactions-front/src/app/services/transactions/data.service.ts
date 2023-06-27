@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection,AngularFirestoreDocument,DocumentData,QueryFn } from '@angular/fire/compat/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, DocumentData, QueryFn } from '@angular/fire/compat/firestore';
 import { user } from '../../../models/interfaces.type'
-import { map,switchMap } from 'rxjs/operators';
-import { Observable, firstValueFrom, of,take } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable, firstValueFrom, of, take } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-
-
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 import 'firebase/compat/firestore';
 @Injectable({
   providedIn: 'root'
@@ -30,9 +30,9 @@ export class DataService {
       .valueChanges();
   }
   getAllUsersAccounts() {
-    return this.fireStore 
-            .collectionGroup('accounts')
-            .valueChanges()
+    return this.fireStore
+      .collectionGroup('accounts')
+      .valueChanges()
   }
   getAccountByRib(rib: number) {
     return this.fireStore.collectionGroup('accounts', ref => ref.where('account_number', '==', rib));
@@ -40,11 +40,11 @@ export class DataService {
   getActiveAccounts() {
     return this.fireStore.collectionGroup('accounts', accounts => accounts.where('isLoggedIn', '==', true));
   }
-  
-  async setSubAccountLoggedIn(accountId: string,userUid : string): Promise<void> {
+
+  async setSubAccountLoggedIn(accountId: string, userUid: string): Promise<void> {
     const accountRef = this.fireStore.collectionGroup(`accounts`, ref => ref.where('account_number', '==', accountId));
     const querySnapshot = await firstValueFrom(accountRef.get());
-  
+
     if (!querySnapshot.empty) {
       const docRef = querySnapshot.docs[0].ref;
       await docRef.update({ isLoggedIn: true });
@@ -52,22 +52,22 @@ export class DataService {
       throw new Error(`Sub-account with accountId ${accountId} not found.`);
     }
   }
-  
-  
-    getUserSessions(userUid: string) {
+
+
+  getUserSessions(userUid: string) {
 
     return this.fireStore.collection('sessions', ref =>
       ref.where('accountId', '==', userUid)
     )
-    .snapshotChanges()
-    .pipe(
-      map(changes =>
-        changes.map(c =>
-          ({ id: c.payload.doc.id })
-          
+      .snapshotChanges()
+      .pipe(
+        map(changes =>
+          changes.map(c =>
+            ({ id: c.payload.doc.id })
+
+          )
         )
-      )
-    );
+      );
   }
   getUserTransactions(userId: string) {
     return this.getUserSessions(userId).pipe(
@@ -75,9 +75,9 @@ export class DataService {
         if (sessions.length > 0) {
           const sessionId = sessions[0].id;
           return this.fireStore
-          .collection(`sessions/${sessionId}/transactions`, ref => ref.orderBy('Date', 'desc'))
-          .valueChanges();
-        } else {  
+            .collection(`sessions/${sessionId}/transactions`, ref => ref.orderBy('Date', 'desc'))
+            .valueChanges();
+        } else {
           return of([]); // Return an empty array if no session found for the user
         }
       })
@@ -85,26 +85,48 @@ export class DataService {
   }
 
   getUserTransactionsByOperationType(userId: string, type: string) {
-    return this.getUserSessions(userId).pipe(
-      switchMap((sessions) => {
-        if (sessions.length > 0) {
-          const sessionId = sessions[0].id;
-          return this.fireStore
-          .collection(`sessions/${sessionId}/transactions`, ref => ref.where('type', '==', type).orderBy('Date', 'desc') )
-          .valueChanges();
-        } else {  
-          return of([]); // Return an empty array if no session found for the user
-        }
-      })
-    );
-  }
-  
+    if (type == 'in') {
+      return this.getUserSessions(userId).pipe(
+        switchMap((sessions) => {
+          if (sessions.length > 0) {
+            const sessionId = sessions[0].id;
+            return this.fireStore
+              .collection(`sessions/${sessionId}/transactions`, ref => {
+                let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+                query = query.where('type', 'in', ['in', 'Depot']);
 
-  createSession(accountId : string , date: Date) {
+                return query.orderBy('Date', 'desc');
+              })
+              .valueChanges();
+          } else {
+            return of([]); // Return an empty array if no session found for the user
+          }
+        })
+      );
+
+    } else {
+
+      return this.getUserSessions(userId).pipe(
+        switchMap((sessions) => {
+          if (sessions.length > 0) {
+            const sessionId = sessions[0].id;
+            return this.fireStore
+              .collection(`sessions/${sessionId}/transactions`, ref => ref.where('type', '==', type).orderBy('Date', 'desc'))
+              .valueChanges();
+          } else {
+            return of([]); // Return an empty array if no session found for the user
+          }
+        })
+      );
+    }
+  }
+
+
+  createSession(accountId: string, date: Date) {
     const sessionData = {
-      accountId : accountId,
-      date : date,
-      state : 0,
+      accountId: accountId,
+      date: date,
+      state: 0,
     }
 
     return new Observable<string>((observer) => {
@@ -122,11 +144,11 @@ export class DataService {
   }
   updateTransactionTitle(transactionID: string, newTransactionTitle: string): Promise<void> {
     console.log(transactionID);
-    
+
     const transactionCollectionRef = this.fireStore.collectionGroup('transactions', transaction =>
       transaction.where('transactionID', '==', transactionID)
     );
-  
+
     return transactionCollectionRef.get().toPromise().then(querySnapshot => {
       if (querySnapshot && !querySnapshot.empty) {
         const transactionDocRef = querySnapshot.docs[0].ref;
@@ -136,9 +158,9 @@ export class DataService {
       }
     });
   }
-  createTransaction(amount: number, sequence: number, title: string, type: string, RIB : string) {
+  createTransaction(amount: number, sequence: number, title: string, type: string, RIB: string) {
     const transactionMaker = localStorage.getItem('currentAccount') || '';
-  
+
     this.getUserSessions(transactionMaker).pipe(
       take(1),
       switchMap((sessions) => {
@@ -153,11 +175,11 @@ export class DataService {
             type: type,
             Date: new Date(),
             transactionMaker: transactionMaker,
-            RIB : RIB,
-            transactionID :uuidv4(),
-            source : 2
+            RIB: RIB,
+            transactionID: uuidv4(),
+            source: 2
           };
-  
+
           return transactionCollectionReference.add(transactionData);
         } else {
           return this.createSession(transactionMaker, new Date()).pipe(
@@ -171,26 +193,27 @@ export class DataService {
                 type: type,
                 Date: new Date(),
                 transactionMaker: transactionMaker,
-                RIB : RIB,
-                transactionID :uuidv4(),
-                source : 2
+                RIB: RIB,
+                transactionID: uuidv4(),
+                source: 2
               };
-  
+
               return transactionCollectionReference.add(transactionData);
             })
-      )}
-      })
-      ).subscribe({
-        next: () => {
-          console.log('Transaction created successfully');
-        },
-        error: (error) => {
-          console.error('Error creating transaction:', error);
+          )
         }
-      });
+      })
+    ).subscribe({
+      next: () => {
+        console.log('Transaction created successfully');
+      },
+      error: (error) => {
+        console.error('Error creating transaction:', error);
+      }
+    });
   }
-  
-    
+
+
 
 
 }
