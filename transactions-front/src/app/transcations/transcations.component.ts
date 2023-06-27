@@ -43,6 +43,7 @@ export class TranscationsComponent {
     this.setRIB();
   }
 
+  prevTitle : string = '';
 
   // == current date == //
   currentDate: string = '';
@@ -81,8 +82,10 @@ export class TranscationsComponent {
   closeDepotMenu() {
     this.displayDepotMenu = false;
   }
-  toggleChangeTitleInput() {
+  toggleChangeTitleInput(title : string) {
     this.changeTitleInput = !this.changeTitleInput;
+    this.prevTitle = title;
+    
   }
 
   /* == Depot methods == */
@@ -221,14 +224,18 @@ export class TranscationsComponent {
     const user = userString ? JSON.parse(userString) : null;
     const userId = user?.uid;
     const userRole = user?.role;
+    const switchedAccountsHistoryString = localStorage.getItem('switchedAccountsHistory');
+    const switchedAccountsHistory = switchedAccountsHistoryString ? JSON.parse(switchedAccountsHistoryString) : [];    
     const currentAccount = localStorage.getItem('currentAccount');
+    
     if(userRole == 'user') {
 
       this.accountsAndTransactions.getUserAccounts(userId).subscribe((accounts : any[]) => {
-        this.userAccounts = accounts.filter(account => account.account_number !== currentAccount);})
+        this.userAccounts = accounts.filter(account => !switchedAccountsHistory.some((history: { account_id: any; }) => history.account_id == account.account_number));
+      })
     }else if(userRole == 'admin') {
       this.accountsAndTransactions.getAllUsersAccounts().subscribe((accounts : any[]) => {
-        this.userAccounts = accounts.filter(account => account.account_number !== currentAccount);
+        this.userAccounts = accounts.filter(account => !switchedAccountsHistory.some((history: { account_id: any; }) => history.account_id == account.account_number));
       })
     }
   }
@@ -249,7 +256,7 @@ export class TranscationsComponent {
         'account_id': switchedAccountId,
         'account_username': switchedAccountName
       });
-    }
+      localStorage.setItem('switchedAccountsHistory', JSON.stringify(this.switchedAccountsHistory));    }
 
     // Remove duplicates from the history array
     this.switchedAccountsHistory = this.switchedAccountsHistory.filter(

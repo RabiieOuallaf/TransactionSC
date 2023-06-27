@@ -187,7 +187,7 @@
     </div>
    <!-- Change title --> 
    <div class="transaction-menu" [hidden]="!changeTitleInput"> 
-    <div class="close-accounts-list" (click)="toggleChangeTitleInput()">
+    <div class="close-accounts-list" (click)="toggleChangeTitleInput('')">
         X
     </div>
     <div class="transaction-info">
@@ -201,6 +201,7 @@
                 #operationTitle
                 type="text"
                 (keyup)="setTitle(operationTitle.value)"
+                value="{{prevTitle}}"
                 >
         </div>
         .
@@ -209,7 +210,7 @@
 
         <button 
             class="transaction-button" 
-            (click)="toggleChangeTitleInput();changeTransactionTitle()">
+            (click)="toggleChangeTitleInput('');changeTransactionTitle()">
 
             Valider
         </button>
@@ -246,7 +247,7 @@
                 <td>
                     {{ transaction.type }}
                 </td>
-                <td (click)="toggleChangeTitleInput();setTransactionID(transaction.transactionID)">
+                <td (click)="toggleChangeTitleInput(transaction.title);setTransactionID(transaction.transactionID)">
                     {{ transaction.title }}
                 </td>
                 <td [ngClass]="{'montant-positive' : transaction.type == 'in' , 'montant-negative' : transaction.type == 'out'}">
