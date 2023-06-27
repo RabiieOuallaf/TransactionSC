@@ -5,18 +5,18 @@
       
     <div class="operations">
         <div class="sold">
-            <span>{{totalTransactionAmount}} DH</span>
+            <span>{{totalTransactionAmount}}&nbsp;DH</span>
          </div>
 
          <div class="accounts" (click)="toggleAccountList()">
-            <span>accounts</span>
+            <span>Accounts</span>
          </div>
 
          <div class="transactions" (click)="toggleTransactionMenu()">
-            <span>make a transaction</span>
+            <span>Make a transaction</span>
          </div>
          <div class="transactions" (click)="toggleDepotMenu()" id="depotMenuButton">
-            <span>depot sold</span>
+            <span>Depot sold</span>
          </div>
 
 
@@ -145,7 +145,7 @@
             
             <div class="montant">
                 <span>
-                    Montant :
+                    Amount :
                 </span>
                 <br>
                 <input 
@@ -219,7 +219,7 @@
         <button (click)="reverseTransactions()">{{reverseTransactionLabel }}</button>
     </div>
     <div class="operation-type-choice">
-        <button (click)="displayUserTransactions()">all</button>
+        <button (click)="displayUserTransactions()">All</button>
         <button (click)="displayUserTransactionsByOperationType('in');removeDepotMenuButton()">In</button>
         <button (click)="displayUserTransactionsByOperationType('out');removeDepotMenuButton()">Out</button>
 
@@ -231,7 +231,7 @@
               <th>Sequence</th> 
               <th>Type</th> 
               <th>Title</th>
-              <th>Montant</th>
+              <th>Amount</th>
               <th>RIB</th>
               <!-- <th>Source</th> -->
               <th>Creating date</th>
@@ -252,7 +252,7 @@
                 <td [ngClass]="{'montant-positive' : transaction.type == 'in' , 'montant-negative' : transaction.type == 'out'}">
                     <span *ngIf="transaction.type === 'in'">+</span>
                     <span *ngIf="transaction.type === 'out'">-</span>
-                    {{   transaction.amount  }} DH
+                    {{   transaction.amount  }}&nbsp;DH
                 </td>
                 <td>
                     {{ transaction.RIB }}

@@ -24,7 +24,7 @@ export class TranscationsComponent {
   userAccountsTransactionsHistory: any[] = [];
   leftTransactions: number[] = [];
 
-  reverseTransactionLabel = 'oldest-newst'
+  reverseTransactionLabel = 'Oldest-Newst'
 
 
   constructor(

@@ -249,6 +249,57 @@ pagination-controls {
     color: lightblue;
   }
 }
+.accounts{
+  display: flex;
+  margin-left:1rem;
+  cursor: pointer;
+}
+.popup-accounts {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #cecece;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  border-radius: 16px;
+ 
+}
+
+.popup-accounts h3 {
+  font-size: 24px;
+  margin-bottom: 10px; /* Add margin at the bottom of the heading */
+}
+
+.popup-accounts button {
+  margin-top: 1rem;
+  background-color: #6516cd;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  outline: none;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  transition: background-color 300ms, padding 300ms;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.accounts-child {
+  background-color: #a6a6a6;
+}
+.popup-accounts td {
+  padding: 10px;
+ 
+}
 
 
 /* this is some classes if you need to style the pagination 
